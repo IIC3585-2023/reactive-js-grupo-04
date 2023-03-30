@@ -38,16 +38,15 @@ const sizeCell = 100;
 
 const getNextCell = (player, canvas) => {
     const arrayBoard = canvas.arrayBoard;
-    const sizeCell = canvas.sizeCell;
     switch (player.direction) {
         case "up":
-            return arrayBoard[(player.y - player.speed) / sizeCell][player.x / sizeCell];
+            return arrayBoard[(player.y - player.speed)][player.x];
         case "down":
-            return arrayBoard[(player.y + player.speed) / sizeCell][player.x / sizeCell];
+            return arrayBoard[(player.y + player.speed)][player.x];
         case "left":
-            return arrayBoard[player.y / sizeCell][(player.x - player.speed) / sizeCell];
+            return arrayBoard[player.y][(player.x - player.speed)];
         case "right":
-            return arrayBoard[player.y / sizeCell][(player.x + player.speed) / sizeCell];
+            return arrayBoard[player.y][(player.x + player.speed)];
     }
 }
 
@@ -78,13 +77,13 @@ const main = () => {
 
     // player 1
     const sizeCharacter = sizeCell;
-    const player1 = new Player("player1", x = sizeCharacter, y = sizeCharacter, size = sizeCharacter, KEYMAP.player1);
+    const player1 = new Player("player1", x = 1, y = 1, size = sizeCharacter, KEYMAP.player1);
     canvas.drawPlayer(player1);
     const player1$ = changeDirectionPlayer(player1);
     suscribePlayer(player1$, player1, canvas);
 
 //     // player 2
-//     const player2 = new Player("player2", x = sizeCharacter, y = sizeCharacter, size = sizeCharacter, KEYMAP.player2);
+//     const player2 = new Player("player2", x = 1, y = 1, size = sizeCharacter, KEYMAP.player2);
 //     canvas.drawPlayer(player2);
 //     const player2$ = changeDirectionPlayer(player2);
 //     suscribePlayer(player2$, player2, canvas);

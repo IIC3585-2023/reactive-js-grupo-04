@@ -6,7 +6,7 @@ class Entity {
         this.id = id;
         this.size = size;
         this.direction = "up";
-        this.speed = size;
+        this.speed = 1;
     }
 }
 

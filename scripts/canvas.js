@@ -26,18 +26,6 @@ const drawMap = (arrayBoard, canvas, context, sizeCell) => {
 }
 
 
-const drawPlayer = (player, context) => {
-    const img = document.getElementById(player.id);
-    context.drawImage(img, player.x, player.y, player.size, player.size);
-    // // draw rect
-    // context.fillStyle = player.color;
-    // context.fillRect(player.x, player.y, player.size, player.size);
-}
-
-const clearPlayer = (player, context) => {
-    context.clearRect(player.x, player.y, player.size, player.size);
-}
-
 class Canvas {
     constructor(board, sizeCell, canvas, context) {
         this.arrayBoard = getArrayFromBoard(board);
@@ -53,16 +41,26 @@ class Canvas {
 
 
     drawPlayer(player) {
-        drawPlayer(player, this.context);
+        const img = document.getElementById(player.id);
+        const { x, y }= this.getCoordinates(player.x, player.y);
+        this.context.drawImage(img, x, y, player.size, player.size);
     }
 
 
     clearPlayer(player) {
-        clearPlayer(player, this.context);
+        const { x, y }= this.getCoordinates(player.x, player.y);
+        this.context.clearRect(x, y, player.size, player.size);
     }
 
 
     getCell(x, y) {
         return this.arrayBoard[y][x];
+    }
+
+    getCoordinates(x, y) {
+        return {
+            x: x * this.sizeCell,
+            y: y * this.sizeCell
+        }
     }
 }
