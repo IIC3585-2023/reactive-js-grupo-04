@@ -1,21 +1,18 @@
 // import { Board } from './map.js';
-// import { Player } from './player.js';
+// import { Player } from './entities.js';
 
 const BOARD = `
-###############################
-#..............#..............#
-#..............#..............#
-#.............................#
-#..............#..............#
-#..............#..............#
-######....###########....######
-#..............#..............#
-#..............#..............#
-#.............................#
-#..............#..............#
-#..............#..............#
-###############################
-`
+############################
+#............##............#
+#.####.#####.##.#####.####.#
+#o####.#####.##.#####.####o#
+#.####.#####.##.#####.####.#
+#..........................#
+#.####.##.########.##.####.#
+#.####.##.########.##.####.#
+#......##....##....##......#
+######....##....##....######
+############################`;
 
 const CANVAS = document.getElementById('map');
 const CONTEXT = CANVAS.getContext('2d');
@@ -36,7 +33,7 @@ const KEYMAP = {
     },
 };
 
-const sizeCell = 20;
+const sizeCell = 100;
 
 
 const getNextCell = (player, canvas) => {
@@ -80,16 +77,17 @@ const main = () => {
 
 
     // player 1
-    const player1 = new Player(1, x = 20, y = 20, size = sizeCell, keymap=KEYMAP.player1);
+    const sizeCharacter = sizeCell;
+    const player1 = new Player("player1", x = sizeCharacter, y = sizeCharacter, size = sizeCharacter, KEYMAP.player1);
     canvas.drawPlayer(player1);
     const player1$ = changeDirectionPlayer(player1);
     suscribePlayer(player1$, player1, canvas);
 
-    // player 2
-    const player2 = new Player(2, x = 40, y = 20, size = sizeCell, keymap=KEYMAP.player2);
-    canvas.drawPlayer(player2);
-    const player2$ = changeDirectionPlayer(player2);
-    suscribePlayer(player2$, player2, canvas);
+//     // player 2
+//     const player2 = new Player("player2", x = sizeCharacter, y = sizeCharacter, size = sizeCharacter, KEYMAP.player2);
+//     canvas.drawPlayer(player2);
+//     const player2$ = changeDirectionPlayer(player2);
+//     suscribePlayer(player2$, player2, canvas);
 }
 
 main();

@@ -27,8 +27,11 @@ const drawMap = (arrayBoard, canvas, context, sizeCell) => {
 
 
 const drawPlayer = (player, context) => {
-    context.fillStyle = player.color;
-    context.fillRect(player.x, player.y, player.size, player.size);
+    const img = document.getElementById(player.id);
+    context.drawImage(img, player.x, player.y, player.size, player.size);
+    // // draw rect
+    // context.fillStyle = player.color;
+    // context.fillRect(player.x, player.y, player.size, player.size);
 }
 
 const clearPlayer = (player, context) => {

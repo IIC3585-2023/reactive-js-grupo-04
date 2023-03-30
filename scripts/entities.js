@@ -13,7 +13,6 @@ class Entity {
 class Player extends Entity {
     constructor(id, x, y, size, keymap) {
         super(id, x, y, size);
-        this.color = (id === 1) ? "red" : "blue";
         this.keymap = keymap;
     }
 
