@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Rx JS - G4</title>
+
+    <link rel="stylesheet" href="index.css" />
+    <link
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
+    />    
+    <!-- Rx js -->
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/rxjs/4.1.0/rx.all.js'></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/rxjs/6.5.2/rxjs.umd.js"></script>
+  </head>
+	<body>
+    <h2>Title of the game</h2>
+    First Player controls:
+    <div class="controls">
+      <i class="fa fa-arrow-left key"></i>
+      <i class="fa fa-arrow-up key"></i>
+      <i class="fa fa-arrow-right key"></i>
+      <i class="fa fa-arrow-down key"></i>
+    </div>
+    Second Player controls:
+    <div class="controls">
+      <span class="key text-key">
+        a
+      </span>
+      <span class="key text-key">
+        w
+      </span>
+      <span class="key text-key">
+        d
+      </span>
+      <span class="key text-key">
+        s
+      </span>
+    </div>
+    <canvas id="map"></canvas>
+	</body>
+  <!-- scripts -->
+  <script src="canvas.js"></script>
+  <script src="players.js"></script>
+  <script src="main.js"></script>
+</html>
