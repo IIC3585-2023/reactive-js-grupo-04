@@ -3,15 +3,15 @@
 
 const BOARD = `
 ############################
-#............##............#
+#............##...........T#
 #.####.#####.##.#####.####.#
-#o####.#####.##.#####.####o#
+#.####.#####.##.#####.####.#
 #.####.#####.##.#####.####.#
 #..........................#
 #.####.##.########.##.####.#
 #.####.##.########.##.####.#
-#......##....##....##......#
-######....##....##....######
+#T.....##....##....##......#
+######....##....##T...######
 ############################`;
 
 const CANVAS = document.getElementById('map');
@@ -83,7 +83,7 @@ const main = () => {
     suscribePlayer(player1$, player1, canvas);
 
 //     // player 2
-//     const player2 = new Player("player2", x = 1, y = 1, size = sizeCharacter, KEYMAP.player2);
+//     const player2 = new Player("player2", x = 2, y = 1, size = sizeCharacter, KEYMAP.player2);
 //     canvas.drawPlayer(player2);
 //     const player2$ = changeDirectionPlayer(player2);
 //     suscribePlayer(player2$, player2, canvas);

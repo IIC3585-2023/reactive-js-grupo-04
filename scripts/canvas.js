@@ -21,6 +21,31 @@ const drawMap = (arrayBoard, canvas, context, sizeCell) => {
                 cellSize,
                 cellSize
             );
+            if (cell === 'T') {
+                // creates a circle with a number inside with a black border
+                const border = cellSize / 20;
+                context.beginPath();
+                context.arc(
+                    cellIndex * (cellSize) + (cellSize / 2),
+                    rowIndex * (cellSize) + (cellSize / 2),
+                    cellSize / 2 - border,
+                    0,
+                    2 * Math.PI
+                );
+                context.fillStyle = '#e2e8f0';
+                context.fill();
+                context.lineWidth = border;
+                context.strokeStyle = 'black';
+                context.stroke();
+                context.fillStyle = 'black';
+                context.font = 'bold 40px Arial';
+                context.textAlign = 'center';
+                context.fillText(
+                    rowIndex + 1,
+                    cellIndex * (cellSize) + (cellSize / 2),
+                    rowIndex * (cellSize) + (cellSize / 2) + 10
+                );
+            }
         });
     });
 }
