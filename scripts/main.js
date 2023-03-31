@@ -36,20 +36,6 @@ const KEYMAP = {
 const sizeCell = 100;
 
 
-const getNextCell = (player, canvas) => {
-    const arrayBoard = canvas.arrayBoard;
-    switch (player.direction) {
-        case "up":
-            return arrayBoard[(player.y - player.speed)][player.x];
-        case "down":
-            return arrayBoard[(player.y + player.speed)][player.x];
-        case "left":
-            return arrayBoard[player.y][(player.x - player.speed)];
-        case "right":
-            return arrayBoard[player.y][(player.x + player.speed)];
-    }
-}
-
 const main = () => {
     // canvas
     const canvas = new Canvas(BOARD, sizeCell, CANVAS, CONTEXT);
@@ -68,7 +54,7 @@ const main = () => {
 
     const suscribePlayer = (observablePlayer, playerObj, canvas) => 
         observablePlayer.subscribe((player) => {
-            if (getNextCell(player, canvas) === '#') return;
+            if (canvas.getNextPlayerCell(player) === '#') return;
             canvas.clearPlayer(playerObj);
             playerObj.move(player.direction);
             canvas.drawPlayer(playerObj);

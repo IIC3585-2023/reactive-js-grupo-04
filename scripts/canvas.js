@@ -82,6 +82,20 @@ class Canvas {
         return this.arrayBoard[y][x];
     }
 
+    getNextPlayerCell = (player) => {
+        const arrayBoard = this.arrayBoard;
+        switch (player.direction) {
+            case "up":
+                return arrayBoard[(player.y - player.speed)][player.x];
+            case "down":
+                return arrayBoard[(player.y + player.speed)][player.x];
+            case "left":
+                return arrayBoard[player.y][(player.x - player.speed)];
+            case "right":
+                return arrayBoard[player.y][(player.x + player.speed)];
+        }
+    }
+
     getCoordinates(x, y) {
         return {
             x: x * this.sizeCell,
