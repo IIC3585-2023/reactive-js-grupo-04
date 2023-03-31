@@ -12,20 +12,15 @@ class Entity {
     }
     
     move() {
-        switch (this.direction) {
-            case "up":
-                this.y -= this.speed;
-                break;
-            case "down":
-                this.y += this.speed;
-                break;
-            case "left":
-                this.x -= this.speed;
-                break;
-            case "right":
-                this.x += this.speed;
-                break;
-        }
+        const directionMap = {
+            up: { x: 0, y: -1 },
+            down: { x: 0, y: 1 },
+            left: { x: -1, y: 0 },
+            right: { x: 1, y: 0 }
+        };
+        const { x, y } = directionMap[this.direction];
+        this.x += x * this.speed;
+        this.y += y * this.speed;
     }
 
     changeDirection(direction) {
@@ -111,6 +106,7 @@ class Enemy extends Entity {
         let validSurroundings = surroundings.filter((surrounding) => {
             return surrounding.content !== '#';
         });
+
         // if there is only one direction, return it
         if (validSurroundings.length === 1) return validSurroundings[0].direction;
 
