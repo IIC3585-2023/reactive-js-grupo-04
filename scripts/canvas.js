@@ -9,6 +9,7 @@ const getArrayFromBoard = (board) => {
 class Canvas {
     constructor(board, sizeCell, canvas, context) {
         this.arrayBoard = getArrayFromBoard(board);
+        this.validCells = this.getValidCells();
         this.sizeCell = sizeCell;
         this.canvas = canvas;
         this.context = context;
@@ -97,5 +98,25 @@ class Canvas {
             cellIndex * (cellSize) + (cellSize / 2),
             rowIndex * (cellSize) + (cellSize / 2) + 10
         );
+    }
+
+    getValidCells() {
+        const validCells = [];
+        this.arrayBoard.map((row, rowIndex) => {
+            row.map((cell, cellIndex) => {
+                if (cell === '.') {
+                    validCells.push({
+                        x: cellIndex,
+                        y: rowIndex
+                    });
+                }
+            });
+        });
+        return validCells;
+    }
+
+    getRandomValidCell() {
+        const randomIndex = Math.floor(Math.random() * this.validCells.length);
+        return this.validCells[randomIndex];
     }
 }

@@ -8,6 +8,7 @@ class Entity {
         this.speed = 1;
         this.direction = 'up';
         this.entity$ = null;
+        this.suscription$ = null;
     }
     
     move() {
@@ -36,7 +37,7 @@ class Entity {
         if (!this.entity$) {
             throw new Error('Observable subject not declared.');
         }
-        this.entity$.subscribe(
+        this.suscription$ = this.entity$.subscribe(
             (entity) => {
                 if (canvas.getNextEntityCell(entity) === '#') return;
                 canvas.clearEntity(this);
@@ -46,6 +47,13 @@ class Entity {
             (err) => console.log(err),
             () => console.log('complete')
         );
+    }
+
+    unsuscribeEntity() {
+        if (!this.suscription$) {
+            throw new Error('Observable subject not suscribed.');
+        }
+        this.suscription$.unsubscribe();
     }
 
     toString() {
@@ -72,7 +80,7 @@ class Player extends Entity{
                         player.changeDirection(direction);
                     }
                     return player;
-            }, this)
+                }, this)
             );
     }
 }
