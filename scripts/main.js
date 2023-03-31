@@ -55,14 +55,15 @@ const main = () => {
     player1.suscribeEntity(canvas);
 
     // // player 2
-    ({ x, y } = canvas.getRandomValidCell());
-    const player2 = new Player("player2", x = x, y = y, size = sizeCharacter, KEYMAP.player2);
-    players.push(player2);
-    canvas.drawEntity(player2);
-    player2.declareObservablePlayer();
-    player2.suscribeEntity(canvas);
+    // ({ x, y } = canvas.getRandomValidCell());
+    // const player2 = new Player("player2", x = x, y = y, size = sizeCharacter, KEYMAP.player2);
+    // players.push(player2);
+    // canvas.drawEntity(player2);
+    // player2.declareObservablePlayer();
+    // player2.suscribeEntity(canvas);
 
     entities.push(...players);
+
     // enemy 1
     ({ x, y } = canvas.getRandomValidCell());
     const enemy1 = new Enemy("enemy1", x = x, y = y, size = sizeCharacter, players);
@@ -71,12 +72,13 @@ const main = () => {
     enemy1.declareObservableEnemy(canvas);
     enemy1.suscribeEntity(canvas);
 
-    ({ x, y } = canvas.getRandomValidCell());
-    const enemy2 = new Enemy("enemy2", x = x, y = y, size = sizeCharacter, players);
-    entities.push(enemy2);
-    canvas.drawEntity(enemy2);
-    enemy2.declareObservableEnemy(canvas);
-    enemy2.suscribeEntity(canvas);
+    // // enemy 2
+    // ({ x, y } = canvas.getRandomValidCell());
+    // const enemy2 = new Enemy("enemy2", x = x, y = y, size = sizeCharacter, players);
+    // entities.push(enemy2);
+    // canvas.drawEntity(enemy2);
+    // enemy2.declareObservableEnemy(canvas);
+    // enemy2.suscribeEntity(canvas);
 }
 
 
