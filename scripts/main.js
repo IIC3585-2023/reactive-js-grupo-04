@@ -1,4 +1,4 @@
-// import { Board } from './map.js';
+// import { Canvas } from './canvas.js';
 // import { Player } from './entities.js';
 
 const BOARD = `

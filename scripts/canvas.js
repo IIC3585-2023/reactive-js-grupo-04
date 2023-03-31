@@ -59,11 +59,9 @@ class Canvas {
         this.context = context;
     }
 
-
     draw() {
         drawMap(this.arrayBoard, this.canvas, this.context, this.sizeCell);
     }
-
 
     drawPlayer(player) {
         const img = document.getElementById(player.id);
@@ -71,12 +69,10 @@ class Canvas {
         this.context.drawImage(img, x, y, player.size, player.size);
     }
 
-
     clearPlayer(player) {
         const { x, y }= this.getCoordinates(player.x, player.y);
         this.context.clearRect(x, y, player.size, player.size);
     }
-
 
     getCell(x, y) {
         return this.arrayBoard[y][x];

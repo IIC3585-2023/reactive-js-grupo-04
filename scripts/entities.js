@@ -10,6 +10,7 @@ class Entity {
     }
 }
 
+
 class Player extends Entity {
     constructor(id, x, y, size, keymap) {
         super(id, x, y, size);
@@ -32,6 +33,7 @@ class Player extends Entity {
                 break;
         }
     }
+
 
     changeDirection(direction) {
         this.direction = direction;
