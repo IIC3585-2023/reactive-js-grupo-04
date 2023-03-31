@@ -90,8 +90,9 @@ class Player extends Entity{
 
 
 class Enemy extends Entity {
-    constructor(id, x, y, size) {
+    constructor(id, x, y, size, players) {
         super(id, x, y, size);
+        this.playersArray = players;
     }
 
     declareObservableEnemy(canvas) {
@@ -108,18 +109,41 @@ class Enemy extends Entity {
     chooseDirection(canvas) {
         const surroundings = this.getSurroundings(canvas);
         let validSurroundings = surroundings.filter((surrounding) => {
-            const key = Object.keys(surrounding)[0];
-            const value = surrounding[key];
-            return value !== '#';
+            return surrounding.content !== '#';
         });
-        if (validSurroundings.length === 1) return Object.keys(validSurroundings[0])[0];
+        // if there is only one direction, return it
+        if (validSurroundings.length === 1) return validSurroundings[0].direction;
+
+        // remove the oposite direction
         validSurroundings = validSurroundings.filter((surrounding) => {
-            const key = Object.keys(surrounding)[0];
-            return key !== this.opositeDirection(this.direction);
+            return surrounding.direction !== this.opositeDirection(this.direction);
         });
-        const randomIndex = Math.floor(Math.random() * validSurroundings.length);
-        const randomCell = validSurroundings[randomIndex];
-        return Object.keys(randomCell)[0];
+
+        // choose direction more close to the player
+        if (this.playersArray) {
+            this.playersArray.forEach((player) => {
+                // absolute value of the distance between the player and the enemy
+                // root((x2 - x1)^2 + (y2 - y1)^2)
+                validSurroundings.forEach((surrounding) => {
+                    const { x, y } = surrounding.coords;
+                    const distance = Math.sqrt(
+                        Math.pow(player.x - x, 2) + Math.pow(player.y - y, 2)
+                    );
+                    surrounding.distance += distance;
+                }); 
+            });
+        }
+
+        // choose the direction with the lowest distance
+        const min = validSurroundings.reduce((min, surrounding) => {
+            return (min.distance < surrounding.distance) ? min : surrounding;
+        }, validSurroundings[0]);
+        return (min) ? min.direction : this.direction;
+
+
+        // const randomIndex = Math.floor(Math.random() * validSurroundings.length);
+        // const randomCell = validSurroundings[randomIndex];
+        // return Object.keys(randomCell)[0];
     }
 
     opositeDirection(direction) {
@@ -136,12 +160,18 @@ class Enemy extends Entity {
     }
 
     getSurroundings(canvas) {
-        const surroundings = [];
-        surroundings.push({"up" : canvas.getCell(this.x, this.y - 1)});
-        surroundings.push({"down" : canvas.getCell(this.x, this.y + 1)});
-        surroundings.push({"left" : canvas.getCell(this.x - 1, this.y)});
-        surroundings.push({"right" : canvas.getCell(this.x + 1, this.y)});
-        return surroundings;
+        const surroundingCells = [
+            {x: 0, y: -1, direction: "up"},
+            {x: 0, y: 1, direction: "down"},
+            {x: -1, y: 0, direction: "left"},
+            {x: 1, y: 0, direction: "right"},
+        ];
+        return surroundingCells.map(({x, y, direction}) => ({
+            direction,
+            content: canvas.getCell(this.x + x, this.y + y),
+            coords: { x: this.x + x, y: this.y + y },
+            distance: 0,
+        }));
     }
 
 }

@@ -41,13 +41,14 @@ const main = () => {
     // canvas
     const canvas = new Canvas(BOARD, sizeCell, CANVAS, CONTEXT);
     canvas.drawMap();
-
+    
+    let players = [];
     const sizeCharacter = sizeCell;
     // player 1
     let { x, y } = canvas.getRandomValidCell();
     console.log();
     const player1 = new Player("player1", x = x, y = y, size = sizeCharacter, KEYMAP.player1);
-    entities.push(player1);
+    players.push(player1);
 
     canvas.drawEntity(player1);
     player1.declareObservablePlayer();
@@ -56,14 +57,15 @@ const main = () => {
     // // player 2
     // ({ x, y } = canvas.getRandomValidCell());
     // const player2 = new Player("player2", x = x, y = y, size = sizeCharacter, KEYMAP.player2);
-    // entities.push(player2);
+    // players.push(player2);
     // canvas.drawEntity(player2);
     // player2.declareObservablePlayer();
     // player2.suscribeEntity(canvas);
 
+    entities.push(...players);
     // enemy 1
     ({ x, y } = canvas.getRandomValidCell());
-    const enemy1 = new Enemy("enemy1", x = x, y = y, size = sizeCharacter);
+    const enemy1 = new Enemy("enemy1", x = x, y = y, size = sizeCharacter, players);
     entities.push(enemy1);
     canvas.drawEntity(enemy1);
     enemy1.declareObservableEnemy(canvas);
