@@ -36,32 +36,32 @@ class Canvas {
         });
     }
 
-    drawPlayer(player) {
-        const img = document.getElementById(player.id);
-        const { x, y }= this.getCoordinates(player.x, player.y);
-        this.context.drawImage(img, x, y, player.size, player.size);
+    drawEntity(entity) {
+        const img = document.getElementById(entity.id);
+        const { x, y }= this.getCoordinates(entity.x, entity.y);
+        this.context.drawImage(img, x, y, entity.size, entity.size);
     }
 
-    clearPlayer(player) {
-        const { x, y }= this.getCoordinates(player.x, player.y);
-        this.context.clearRect(x, y, player.size, player.size);
+    clearEntity(entity) {
+        const { x, y }= this.getCoordinates(entity.x, entity.y);
+        this.context.clearRect(x, y, entity.size, entity.size);
     }
 
     getCell(x, y) {
         return this.arrayBoard[y][x];
     }
 
-    getNextPlayerCell(player) {
+    getNextEntityCell(entity) {
         const arrayBoard = this.arrayBoard;
-        switch (player.direction) {
+        switch (entity.direction) {
             case "up":
-                return arrayBoard[(player.y - player.speed)][player.x];
+                return arrayBoard[(entity.y - entity.speed)][entity.x];
             case "down":
-                return arrayBoard[(player.y + player.speed)][player.x];
+                return arrayBoard[(entity.y + entity.speed)][entity.x];
             case "left":
-                return arrayBoard[player.y][(player.x - player.speed)];
+                return arrayBoard[entity.y][(entity.x - entity.speed)];
             case "right":
-                return arrayBoard[player.y][(player.x + player.speed)];
+                return arrayBoard[entity.y][(entity.x + entity.speed)];
         }
     }
 
