@@ -1,7 +1,7 @@
 
 const getArrayFromBoard = (board) => {
     const rows = board.split('\n').filter((row) => row.length > 0);
-    const columns = rows.map((row) => row.split(''));
+    const columns = rows.map((row) => row.replace(/ /g, '').split(''));
     return columns;
 }
 
@@ -14,7 +14,7 @@ const drawMap = (arrayBoard, canvas, context, sizeCell) => {
     const cellSize = sizeCell;
     arrayBoard.map((row, rowIndex) => {
         row.map((cell, cellIndex) => {
-            context.fillStyle = cell === '#' ? 'black' : 'white';
+            context.fillStyle = cell === '#' ? 'black' : 'transparent';
             context.fillRect(
                 cellIndex * (cellSize),
                 rowIndex * (cellSize),

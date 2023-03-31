@@ -33,44 +33,47 @@
     </script>
   </head>
 	<body>
-    <h2>Examen del Cazador: Fase Final</h2>
-    <div class="players">
-      <div class="controls">
-        First Player
-        <i class="fa fa-arrow-up key" onclick="keyButton('ArrowUp')">
-        </i>
-        <div class="inside-controls">
-          <i class="fa fa-arrow-left key" onclick="keyButton('ArrowLeft')">
+    <main>
+      <h2>Examen del Cazador: Fase Final</h2>
+      <div class="players">
+        <div class="controls">
+          First Player
+          <i class="fa fa-arrow-up key" onclick="keyButton('ArrowUp')">
           </i>
-          <i class="fa fa-arrow-down key" onclick="keyButton('ArrowDown')">
-          </i>
-          <i class="fa fa-arrow-right key" onclick="keyButton('ArrowRight')">
-          </i>
+          <div class="inside-controls">
+            <i class="fa fa-arrow-left key" onclick="keyButton('ArrowLeft')">
+            </i>
+            <i class="fa fa-arrow-down key" onclick="keyButton('ArrowDown')">
+            </i>
+            <i class="fa fa-arrow-right key" onclick="keyButton('ArrowRight')">
+            </i>
+          </div>
+        </div>
+        <div class="controls">
+          Second Player
+          <span class="key text-key" onclick="keyButton('w')">
+            w
+          </span>
+          <div class="inside-controls">
+            <span class="key text-key" onclick="keyButton('a')">
+              a
+            </span>
+            <span class="key text-key" onclick="keyButton('s')">
+              s
+            </span>
+            <span class="key text-key" onclick="keyButton('d')">
+              d
+            </span>
+          </div>
         </div>
       </div>
-      <div class="controls">
-        Second Player
-        <span class="key text-key" onclick="keyButton('w')">
-          w
-        </span>
-        <div class="inside-controls">
-          <span class="key text-key" onclick="keyButton('a')">
-            a
-          </span>
-          <span class="key text-key" onclick="keyButton('s')">
-            s
-          </span>
-          <span class="key text-key" onclick="keyButton('d')">
-            d
-          </span>
-        </div>
-      </div>
-    </div>
-    <canvas id="map"></canvas>
+      <canvas id="map"></canvas>
+    </main>
     <img id="player1" src="assets/gon.png" hidden style="display:none"/>
     <img id="player2" src="assets/killua.png" hidden style="display:none"/>
 	</body>
   <!-- scripts -->
+  <script src="scripts/boards.js"></script>
   <script src="scripts/canvas.js"></script>
   <script src="scripts/entities.js"></script>
   <script src="scripts/main.js"></script>

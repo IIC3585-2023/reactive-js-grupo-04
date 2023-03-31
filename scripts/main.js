@@ -1,18 +1,8 @@
 // import { Canvas } from './canvas.js';
 // import { Player } from './entities.js';
+// import { BOARDS } from './boards.js';
 
-const BOARD = `
-############################
-#............##...........T#
-#.####.#####.##.#####.####.#
-#.####.#####.##.#####.####.#
-#.####.#####.##.#####.####.#
-#..........................#
-#.####.##.########.##.####.#
-#.####.##.########.##.####.#
-#T.....##....##....##......#
-######....##....##T...######
-############################`;
+const BOARD = BOARDS[0].board;
 
 const CANVAS = document.getElementById('map');
 const CONTEXT = CANVAS.getContext('2d');
