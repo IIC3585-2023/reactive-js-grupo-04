@@ -38,14 +38,16 @@ class Entity {
             throw new Error('Observable subject not declared.');
         }
         this.suscription$ = this.entity$.subscribe(
-            (entity) => {
-                if (canvas.getNextEntityCell(entity) === '#') return;
+            (direction) => {
+                if (!direction) return;
+                this.changeDirection(direction);
+
+                if (canvas.getNextEntityCell(this) === '#') return;
                 canvas.clearEntity(this);
                 this.move();
                 canvas.drawEntity(this);
+                return this;
             },
-            (err) => console.log(err),
-            () => console.log('complete')
         );
     }
 
@@ -74,13 +76,14 @@ class Player extends Entity{
         this.entity$ = rxjs
             .merge(interval$, keydown$)
             .pipe(
-                rxjs.operators.scan((player, event) => {
-                    const direction = this.keymap[event.key] || this.direction;
-                    if (direction) {
-                        player.changeDirection(direction);
+                rxjs.operators.map((event) => {
+                    if (event instanceof KeyboardEvent){
+                        const direction = this.keymap[event.key] || this.direction;
+                        // to avoid spamming the same key to move faster
+                        return (direction === this.direction) ? null : direction;
                     }
-                    return player;
-                }, this)
+                    return this.direction;
+                })
             );
     }
 }
@@ -95,11 +98,10 @@ class Enemy extends Entity {
         const interval$ = rxjs.interval(200);
         this.entity$ = interval$
             .pipe(
-                rxjs.operators.scan((enemy, event) => {
+                rxjs.operators.map(() => {
                     const direction = this.chooseDirection(canvas);
-                    enemy.changeDirection(direction);
-                    return enemy;
-                }, this)
+                    return direction;
+                })
             );
     }
 
