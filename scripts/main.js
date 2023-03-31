@@ -1,5 +1,5 @@
 // import { Canvas } from './canvas.js';
-// import { Player } from './entities.js';
+// import { Player, Enemy } from './entities.js';
 // import { BOARDS } from './boards.js';
 
 const BOARD = BOARDS[0].board;
@@ -29,7 +29,7 @@ const sizeCell = 100;
 const main = () => {
     // canvas
     const canvas = new Canvas(BOARD, sizeCell, CANVAS, CONTEXT);
-    canvas.draw();
+    canvas.drawMap();
 
     const changeDirectionPlayer = (playerObj) => 
         // execute every 200ms or when a key is pressed

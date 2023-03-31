@@ -6,51 +6,6 @@ const getArrayFromBoard = (board) => {
 }
 
 
-const drawMap = (arrayBoard, canvas, context, sizeCell) => {
-    const boardHeight = arrayBoard.length * sizeCell;
-    const boardWidth = arrayBoard[0].length * sizeCell;
-    canvas.height = boardHeight;
-    canvas.width = boardWidth;
-    const cellSize = sizeCell;
-    arrayBoard.map((row, rowIndex) => {
-        row.map((cell, cellIndex) => {
-            context.fillStyle = cell === '#' ? 'black' : 'transparent';
-            context.fillRect(
-                cellIndex * (cellSize),
-                rowIndex * (cellSize),
-                cellSize,
-                cellSize
-            );
-            if (cell === 'T') {
-                // creates a circle with a number inside with a black border
-                const border = cellSize / 20;
-                context.beginPath();
-                context.arc(
-                    cellIndex * (cellSize) + (cellSize / 2),
-                    rowIndex * (cellSize) + (cellSize / 2),
-                    cellSize / 2 - border,
-                    0,
-                    2 * Math.PI
-                );
-                context.fillStyle = '#e2e8f0';
-                context.fill();
-                context.lineWidth = border;
-                context.strokeStyle = 'black';
-                context.stroke();
-                context.fillStyle = 'black';
-                context.font = 'bold 40px Arial';
-                context.textAlign = 'center';
-                context.fillText(
-                    rowIndex + 1,
-                    cellIndex * (cellSize) + (cellSize / 2),
-                    rowIndex * (cellSize) + (cellSize / 2) + 10
-                );
-            }
-        });
-    });
-}
-
-
 class Canvas {
     constructor(board, sizeCell, canvas, context) {
         this.arrayBoard = getArrayFromBoard(board);
@@ -59,8 +14,26 @@ class Canvas {
         this.context = context;
     }
 
-    draw() {
-        drawMap(this.arrayBoard, this.canvas, this.context, this.sizeCell);
+    drawMap() {
+        const cellSize = this.sizeCell;
+        const boardHeight = this.arrayBoard.length * cellSize;
+        const boardWidth = this.arrayBoard[0].length * cellSize;
+        this.canvas.height = boardHeight;
+        this.canvas.width = boardWidth;
+        this.arrayBoard.map((row, rowIndex) => {
+            row.map((cell, cellIndex) => {
+                this.context.fillStyle = cell === '#' ? 'black' : 'transparent';
+                this.context.fillRect(
+                    cellIndex * (cellSize),
+                    rowIndex * (cellSize),
+                    cellSize,
+                    cellSize
+                );
+                if (cell === 'T') {
+                    this.drawCircleWithNumberInside(rowIndex, cellIndex);
+                }
+            });
+        });
     }
 
     drawPlayer(player) {
@@ -78,7 +51,7 @@ class Canvas {
         return this.arrayBoard[y][x];
     }
 
-    getNextPlayerCell = (player) => {
+    getNextPlayerCell(player) {
         const arrayBoard = this.arrayBoard;
         switch (player.direction) {
             case "up":
@@ -97,5 +70,32 @@ class Canvas {
             x: x * this.sizeCell,
             y: y * this.sizeCell
         }
+    }
+
+    drawCircleWithNumberInside(rowIndex, cellIndex) {
+        // creates a circle with a number inside with a black border
+        const cellSize = this.sizeCell;
+        const border = cellSize / 20;
+        this.context.beginPath();
+        this.context.arc(
+            cellIndex * (cellSize) + (cellSize / 2),
+            rowIndex * (cellSize) + (cellSize / 2),
+            cellSize / 2 - border,
+            0,
+            2 * Math.PI
+        );
+        this.context.fillStyle = '#e2e8f0';
+        this.context.fill();
+        this.context.lineWidth = border;
+        this.context.strokeStyle = 'black';
+        this.context.stroke();
+        this.context.fillStyle = 'black';
+        this.context.font = 'bold 40px Arial';
+        this.context.textAlign = 'center';
+        this.context.fillText(
+            Math.floor(Math.random() * 405) + 1,  // random number between 1 and 405
+            cellIndex * (cellSize) + (cellSize / 2),
+            rowIndex * (cellSize) + (cellSize / 2) + 10
+        );
     }
 }

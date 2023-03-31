@@ -35,7 +35,15 @@
 	<body>
     <main>
       <h2>Examen del Cazador: Fase Final</h2>
-      <div class="players">
+      <section class="container-select">
+        <span>Dificultad</span>
+        <select id="map-select">
+          <option value="1">Fácil</option>
+          <option value="2">Normal</option>
+        </select>
+      </section>
+      <canvas id="map"></canvas>
+      <section class="players">
         <div class="controls">
           First Player
           <i class="fa fa-arrow-up key" onclick="keyButton('ArrowUp')">
@@ -66,8 +74,7 @@
             </span>
           </div>
         </div>
-      </div>
-      <canvas id="map"></canvas>
+      </section>
     </main>
     <img id="player1" src="assets/gon.png" hidden style="display:none"/>
     <img id="player2" src="assets/killua.png" hidden style="display:none"/>
