@@ -63,6 +63,7 @@ const main = () => {
     // player2.suscribeEntity(canvas);
 
     entities.push(...players);
+
     // enemy 1
     ({ x, y } = canvas.getRandomValidCell());
     const enemy1 = new Enemy("enemy1", x = x, y = y, size = sizeCharacter, players);
@@ -70,6 +71,14 @@ const main = () => {
     canvas.drawEntity(enemy1);
     enemy1.declareObservableEnemy(canvas);
     enemy1.suscribeEntity(canvas);
+
+    // // enemy 2
+    // ({ x, y } = canvas.getRandomValidCell());
+    // const enemy2 = new Enemy("enemy2", x = x, y = y, size = sizeCharacter, players);
+    // entities.push(enemy2);
+    // canvas.drawEntity(enemy2);
+    // enemy2.declareObservableEnemy(canvas);
+    // enemy2.suscribeEntity(canvas);
 }
 
 

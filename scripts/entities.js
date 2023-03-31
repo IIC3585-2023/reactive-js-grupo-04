@@ -119,6 +119,12 @@ class Enemy extends Entity {
             return surrounding.direction !== this.opositeDirection(this.direction);
         });
 
+        // with probability 0.2, return random direction
+        if (Math.random() < 0.2) {
+            const randomIndex = Math.floor(Math.random() * validSurroundings.length);
+            return validSurroundings[randomIndex].direction;
+        }
+
         // choose direction more close to the player
         if (this.playersArray) {
             this.playersArray.forEach((player) => {
@@ -129,21 +135,19 @@ class Enemy extends Entity {
                     const distance = Math.sqrt(
                         Math.pow(player.x - x, 2) + Math.pow(player.y - y, 2)
                     );
-                    surrounding.distance += distance;
+                    surrounding.distance.push(distance);
                 }); 
             });
         }
 
         // choose the direction with the lowest distance
         const min = validSurroundings.reduce((min, surrounding) => {
-            return (min.distance < surrounding.distance) ? min : surrounding;
+            const minDistance = Math.min(...min.distance);
+            const surroundingDistance = Math.min(...surrounding.distance);
+            return (minDistance < surroundingDistance) ? min : surrounding;
         }, validSurroundings[0]);
+
         return (min) ? min.direction : this.direction;
-
-
-        // const randomIndex = Math.floor(Math.random() * validSurroundings.length);
-        // const randomCell = validSurroundings[randomIndex];
-        // return Object.keys(randomCell)[0];
     }
 
     opositeDirection(direction) {
@@ -170,8 +174,7 @@ class Enemy extends Entity {
             direction,
             content: canvas.getCell(this.x + x, this.y + y),
             coords: { x: this.x + x, y: this.y + y },
-            distance: 0,
+            distance: []
         }));
     }
-
 }
