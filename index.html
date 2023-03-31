@@ -11,8 +11,8 @@
         href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
     />    
     <!-- Rx js -->
-    <script src='https://cdnjs.cloudflare.com/ajax/libs/rxjs/4.1.0/rx.all.js'></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/rxjs/6.5.2/rxjs.umd.js"></script>
+    <script src="https://unpkg.com/rxjs@^7/dist/bundles/rxjs.umd.min.js"></script>
+    
 
     <script>
       const keyButton = (key) => {
@@ -24,6 +24,7 @@
         });
         document.dispatchEvent(event);
       };
+
       // remove scrolling by arrow keys
       window.addEventListener("keydown", function(e) {
           if(["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"].indexOf(e.code) > -1) {
@@ -35,7 +36,15 @@
 	<body>
     <main>
       <h2>Examen del Cazador: Fase Final</h2>
-      <div class="players">
+      <section class="container-select">
+        <span>Dificultad</span>
+        <select id="map-select">
+          <option value="0">Fácil</option>
+          <option value="1">Normal</option>
+        </select>
+      </section>
+      <canvas id="map"></canvas>
+      <section class="players">
         <div class="controls">
           First Player
           <i class="fa fa-arrow-up key" onclick="keyButton('ArrowUp')">
@@ -66,8 +75,7 @@
             </span>
           </div>
         </div>
-      </div>
-      <canvas id="map"></canvas>
+      </section>
     </main>
     <img id="player1" src="assets/gon.png" hidden style="display:none"/>
     <img id="player2" src="assets/killua.png" hidden style="display:none"/>

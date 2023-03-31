@@ -1,16 +1,17 @@
 
 class Entity {
     constructor(id, x, y, size) {
+        this.id = id;
         this.x = x;
         this.y = y;
-        this.id = id;
         this.size = size;
-        this.direction = "up";
         this.speed = 1;
+        this.direction = 'up';
+        this.entity$ = null;
     }
     
-    move(direction) {
-        switch (direction) {
+    move() {
+        switch (this.direction) {
             case "up":
                 this.y -= this.speed;
                 break;
@@ -30,16 +31,49 @@ class Entity {
         this.direction = direction;
     }
 
+    suscribeEntity(canvas) {
+        // subscribe to the new observable
+        if (!this.entity$) {
+            throw new Error('Observable subject not declared.');
+        }
+        this.entity$.subscribe(
+            (entity) => {
+                if (canvas.getNextEntityCell(entity) === '#') return;
+                canvas.clearEntity(this);
+                this.move();
+                canvas.drawEntity(this);
+            },
+            (err) => console.log(err),
+            () => console.log('complete')
+        );
+    }
+
     toString() {
         return `${this.id}: (${this.x}, ${this.y})`;
     }
 }
 
 
-class Player extends Entity {
+class Player extends Entity{
     constructor(id, x, y, size, keymap) {
         super(id, x, y, size);
         this.keymap = keymap;
+    }
+
+    declareObservablePlayer() {
+        const interval$ = rxjs.interval(200);
+        const keydown$ = rxjs.fromEvent(document, 'keydown');
+        this.entity$ = rxjs
+            .merge(interval$, keydown$)
+            .pipe(
+                rxjs.operators.scan((player, event) => {
+                    const direction = this.keymap[event.key] || this.direction;
+                    if (direction) {
+                        player.changeDirection(direction);
+                    }
+                    return player;
+            }, this)
+            );
     }
 }
 
@@ -47,6 +81,18 @@ class Player extends Entity {
 class Enemy extends Entity {
     constructor(id, x, y, size) {
         super(id, x, y, size);
+    }
+
+    declareObservableEnemy(canvas) {
+        const interval$ = rxjs.interval(200);
+        this.entity$ = interval$
+            .pipe(
+                rxjs.operators.scan((enemy, event) => {
+                    const direction = this.chooseDirection(canvas);
+                    enemy.changeDirection(direction);
+                    return enemy;
+                }, this)
+            );
     }
 
     chooseDirection(canvas) {
