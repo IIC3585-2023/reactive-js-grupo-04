@@ -112,7 +112,7 @@ class Enemy extends Entity {
 
         // remove the oposite direction
         validSurroundings = validSurroundings.filter((surrounding) => {
-            return surrounding.direction !== this.opositeDirection(this.direction);
+            return surrounding.direction !== this.oppositeDirection(this.direction);
         });
 
         // with probability 0.2, return random direction
@@ -146,17 +146,14 @@ class Enemy extends Entity {
         return (min) ? min.direction : this.direction;
     }
 
-    opositeDirection(direction) {
-        switch (direction) {
-            case "up":
-                return "down";
-            case "down":
-                return "up";
-            case "left":
-                return "right";
-            case "right":
-                return "left";
-        }
+    oppositeDirection(direction) {
+        const oppositeDirection = {
+            up: "down",
+            down: "up",
+            left: "right",
+            right: "left"
+        };
+        return oppositeDirection[direction];
     }
 
     getSurroundings(canvas) {
