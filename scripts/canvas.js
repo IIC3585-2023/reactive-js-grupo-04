@@ -23,15 +23,30 @@ class Canvas {
         this.canvas.width = boardWidth;
         this.arrayBoard.map((row, rowIndex) => {
             row.map((cell, cellIndex) => {
-                this.context.fillStyle = cell === '#' ? 'black' : 'transparent';
+                this.context.fillStyle = cell === '#' ? '#fed7aa' : 'transparent';
                 this.context.fillRect(
                     cellIndex * (cellSize),
                     rowIndex * (cellSize),
                     cellSize,
                     cellSize
                 );
+                if (cell === '#') {
+                    this.context.drawImage(
+                        document.getElementById('tree'),
+                        cellIndex * (cellSize),
+                        rowIndex * (cellSize),
+                        cellSize,
+                        cellSize
+                    );
+                }
                 if (cell === 'T') {
-                    this.drawCircleWithNumberInside(rowIndex, cellIndex);
+                    this.context.drawImage(
+                        document.getElementById(`reward${Math.floor(Math.random() * 2) + 1}`),
+                        cellIndex * (cellSize),
+                        rowIndex * (cellSize),
+                        cellSize,
+                        cellSize
+                    );
                 }
             });
         });
@@ -71,33 +86,6 @@ class Canvas {
             x: x * this.sizeCell,
             y: y * this.sizeCell
         }
-    }
-
-    drawCircleWithNumberInside(rowIndex, cellIndex) {
-        // creates a circle with a number inside with a black border
-        const cellSize = this.sizeCell;
-        const border = cellSize / 20;
-        this.context.beginPath();
-        this.context.arc(
-            cellIndex * (cellSize) + (cellSize / 2),
-            rowIndex * (cellSize) + (cellSize / 2),
-            cellSize / 2 - border,
-            0,
-            2 * Math.PI
-        );
-        this.context.fillStyle = '#e2e8f0';
-        this.context.fill();
-        this.context.lineWidth = border;
-        this.context.strokeStyle = 'black';
-        this.context.stroke();
-        this.context.fillStyle = 'black';
-        this.context.font = 'bold 40px Arial';
-        this.context.textAlign = 'center';
-        this.context.fillText(
-            Math.floor(Math.random() * 405) + 1,  // random number between 1 and 405
-            cellIndex * (cellSize) + (cellSize / 2),
-            rowIndex * (cellSize) + (cellSize / 2) + 10
-        );
     }
 
     getValidCells() {
