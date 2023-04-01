@@ -31,31 +31,32 @@ class Canvas {
                     cellSize
                 );
                 if (cell === '#') {
-                    this.context.drawImage(
-                        document.getElementById('tree'),
-                        cellIndex * (cellSize),
-                        rowIndex * (cellSize),
-                        cellSize,
-                        cellSize
-                    );
+                    const img = document.getElementById('tree');
+                    this.drawImageOnCell(img, cellIndex, rowIndex);
                 }
                 if (cell === 'T') {
-                    this.context.drawImage(
-                        document.getElementById(`reward${Math.floor(Math.random() * 2) + 1}`),
-                        cellIndex * (cellSize),
-                        rowIndex * (cellSize),
-                        cellSize,
-                        cellSize
-                    );
+                    // get random number from {1, 2}
+                    const randomN = Math.floor(Math.random() * 2) + 1
+                    const img = document.getElementById(`reward${randomN}`);
+                    this.drawImageOnCell(img, cellIndex, rowIndex);
                 }
             });
         });
     }
 
+    drawImageOnCell(img, col, row) {
+        this.context.drawImage(
+            img,
+            col * this.sizeCell,
+            row * this.sizeCell,
+            this.sizeCell,
+            this.sizeCell
+        );
+    }
+
     drawEntity(entity) {
         const img = document.getElementById(entity.id);
-        const { x, y }= this.getCoordinates(entity.x, entity.y);
-        this.context.drawImage(img, x, y, entity.size, entity.size);
+        this.drawImageOnCell(img, entity.x, entity.y);
     }
 
     clearEntity(entity) {
