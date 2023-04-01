@@ -9,11 +9,10 @@
     <link
         rel="stylesheet"
         href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
-    />    
+    />
     <!-- Rx js -->
     <script src="https://unpkg.com/rxjs@^7/dist/bundles/rxjs.umd.min.js"></script>
     
-
     <script>
       const keyButton = (key) => {
         const event = new KeyboardEvent("keydown", {
@@ -51,32 +50,40 @@
       <section class="players">
         <div class="controls">
           1st Player
-          <i class="fa fa-arrow-up key" onclick="keyButton('ArrowUp')">
-          </i>
+          <button class="key">
+            <i class="fa fa-arrow-up" onclick="keyButton('ArrowUp')">
+            </i>
+          </button>
           <div class="inside-controls">
-            <i class="fa fa-arrow-left key" onclick="keyButton('ArrowLeft')">
-            </i>
-            <i class="fa fa-arrow-down key" onclick="keyButton('ArrowDown')">
-            </i>
-            <i class="fa fa-arrow-right key" onclick="keyButton('ArrowRight')">
-            </i>
+            <button class="key">
+              <i class="fa fa-arrow-left" onclick="keyButton('ArrowLeft')">
+              </i>
+            </button>
+            <button class="key">
+              <i class="fa fa-arrow-down" onclick="keyButton('ArrowDown')">
+              </i>
+            </button>
+            <button class="key">
+              <i class="fa fa-arrow-right" onclick="keyButton('ArrowRight')">
+              </i>
+            </button>
           </div>
         </div>
         <div class="controls">
           2nd Player
-          <span class="key text-key" onclick="keyButton('w')">
+          <button class="key text-key" onclick="keyButton('w')">
             w
-          </span>
+          </button>
           <div class="inside-controls">
-            <span class="key text-key" onclick="keyButton('a')">
+            <button class="key text-key" onclick="keyButton('a')">
               a
-            </span>
-            <span class="key text-key" onclick="keyButton('s')">
+            </button>
+            <button class="key text-key" onclick="keyButton('s')">
               s
-            </span>
-            <span class="key text-key" onclick="keyButton('d')">
+            </button>
+            <button class="key text-key" onclick="keyButton('d')">
               d
-            </span>
+            </button>
           </div>
         </div>
       </section>
@@ -85,7 +92,6 @@
     <img id="player2" src="assets/killua.png" hidden style="display:none"/>
     <img id="enemy1" src="assets/hisoka.png" hidden style="display:none"/>
     <img id="enemy2" src="assets/illumi.png" hidden style="display:none"/>
-
 
     <img id="reward1" src="assets/reward1.png" hidden style="display:none"/>
     <img id="reward2" src="assets/reward2.png" hidden style="display:none"/>
