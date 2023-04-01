@@ -2,6 +2,9 @@
     --bg-color: #4fa139;
     --bg-color-2: #f1e3d1;
     --bg-color-3: #3c7a2b;
+    --bg-color-button: #f5f5f5;
+    --box-shadow-button: rgba(45, 35, 66, 0.1) 0 7px 13px -3px,#D6D6E7 0 -3px 0 inset;
+    --box-shadow-button-2: rgba(45, 35, 66, 0.1) 0 7px 13px -3px, #831524 0 -3px 0 inset;
     --text-color: black;
     --font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
       Segoe UI, Roboto, Helvetica Neue, Arial, Noto Sans, sans-serif,
@@ -63,22 +66,22 @@ body {
     margin: 1em;
 }
 
-.container-select span {
+.container-select .start-game {
     margin: 0 1em;
 }
 
-#map-select {
+.start-game {
     padding: 0.5em;
     border-radius: 0.5em;
     font-size: 1em;
     background-color: #f5f5f5;
     border: 2px solid black;
-    box-shadow: rgba(45, 35, 66, 0.4) 0 2px 4px,rgba(45, 35, 66, 0.1) 0 7px 13px -3px,#D6D6E7 0 -3px 0 inset;
+    box-shadow: rgba(45, 35, 66, 0.4) 0 2px 4px, var(--box-shadow-button);
     cursor: pointer;
 }
 
-#map-select:hover {
-    box-shadow: rgba(45, 35, 66, 0.4) 0 4px 8px, rgba(45, 35, 66, 0.1) 0 7px 13px -3px, #D6D6E7 0 -3px 0 inset;
+.start-game:hover {
+    box-shadow: rgba(45, 35, 66, 0.4) 0 4px 8px, var(--box-shadow-button);
     transform: translateY(-2px);
 }
 
@@ -135,7 +138,7 @@ body {
     padding: 1em;
     border-radius: 0.5em;
     background-color: #f5f5f5;
-    box-shadow: rgba(45, 35, 66, 0.4) 0 2px 4px,rgba(45, 35, 66, 0.1) 0 7px 13px -3px,#D6D6E7 0 -3px 0 inset;
+    box-shadow: rgba(45, 35, 66, 0.4) 0 2px 4px, var(--box-shadow-button);
     cursor: pointer;
     border: 2px solid black;
     transition: box-shadow .15s,transform .15s;
@@ -158,12 +161,30 @@ body {
 }
 
 .key:hover {
-    box-shadow: rgba(45, 35, 66, 0.4) 0 4px 8px, rgba(45, 35, 66, 0.1) 0 7px 13px -3px, #D6D6E7 0 -3px 0 inset;
+    box-shadow: rgba(45, 35, 66, 0.4) 0 4px 8px, var(--box-shadow-button);
     transform: translateY(-2px);
 }
 
-.key:active {
+.key:active, .start-game:active {
     box-shadow: #D6D6E7 0 3px 7px inset;
     border: 2px solid #a7a7a7;
+    transform: translateY(2px);
+}
+
+.button-start {
+    background-color: #c42037;
+    color: #f5f5f5;
+    padding: 0.7em 1em;
+    box-shadow: rgba(45, 35, 66, 0.4) 0 2px 4px, var(--box-shadow-button-2);
+}
+
+.button-start:hover {
+    box-shadow: rgba(45, 35, 66, 0.4) 0 4px 8px, var(--box-shadow-button-2);
+    transform: translateY(-2px);
+}
+
+.button-start:active {
+    box-shadow: #831524 0 3px 7px inset;
+    border: 2px solid #a46b6b;
     transform: translateY(2px);
 }

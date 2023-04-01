@@ -90,10 +90,12 @@ main();
 // unsubscribe all entities when close window to avoid memory leaks
 
 const unsubscribeAll = (arrayEntities) => {
+    let i = 0;
     arrayEntities.forEach((entity) => {
         entity.unsuscribeEntity();
+        i += 1;
     });
-    console.log("All entities unsubscribed");
+    console.log(`All entities unsubscribed: ${i}/${arrayEntities.length}`);
 }
 
 window.addEventListener('beforeunload', (event) => {
