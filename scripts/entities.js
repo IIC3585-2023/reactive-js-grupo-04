@@ -7,18 +7,18 @@ class Entity {
         this.size = size;
         this.speed = 1;
         this.direction = 'up';
-        this.entity$ = null;
-        this.suscription$ = null;
-    }
-    
-    move() {
-        const directionMap = {
+        this.directionMap = {
             up: { x: 0, y: -1 },
             down: { x: 0, y: 1 },
             left: { x: -1, y: 0 },
             right: { x: 1, y: 0 }
-        };
-        const { x, y } = directionMap[this.direction];
+        }
+        this.entity$ = null;
+        this.suscription$ = null;
+    }
+
+    move() {
+        const { x, y } = this.directionMap[this.direction];
         this.x += x * this.speed;
         this.y += y * this.speed;
     }
@@ -36,12 +36,10 @@ class Entity {
             (direction) => {
                 if (!direction) return;
                 this.changeDirection(direction);
-
                 if (canvas.getNextEntityCell(this) === '#') return;
                 canvas.clearEntity(this);
                 this.move();
                 canvas.drawEntity(this);
-                return this;
             },
         );
     }
@@ -88,6 +86,12 @@ class Enemy extends Entity {
     constructor(id, x, y, size, players) {
         super(id, x, y, size);
         this.playersArray = players;
+        this.oppositeDirection = {
+            up: "down",
+            down: "up",
+            left: "right",
+            right: "left"
+        };
     }
 
     declareObservableEnemy(canvas) {
@@ -112,7 +116,7 @@ class Enemy extends Entity {
 
         // remove the oposite direction
         validSurroundings = validSurroundings.filter((surrounding) => {
-            return surrounding.direction !== this.oppositeDirection(this.direction);
+            return surrounding.direction !== this.oppositeDirection[this.direction];
         });
 
         // with probability 0.2, return random direction
@@ -146,28 +150,14 @@ class Enemy extends Entity {
         return (min) ? min.direction : this.direction;
     }
 
-    oppositeDirection(direction) {
-        const oppositeDirection = {
-            up: "down",
-            down: "up",
-            left: "right",
-            right: "left"
-        };
-        return oppositeDirection[direction];
-    }
-
     getSurroundings(canvas) {
-        const surroundingCells = [
-            {x: 0, y: -1, direction: "up"},
-            {x: 0, y: 1, direction: "down"},
-            {x: -1, y: 0, direction: "left"},
-            {x: 1, y: 0, direction: "right"},
-        ];
-        return surroundingCells.map(({x, y, direction}) => ({
-            direction,
-            content: canvas.getCell(this.x + x, this.y + y),
-            coords: { x: this.x + x, y: this.y + y },
-            distance: []
-        }));
+        return Object.entries(this.directionMap)
+            .map(([direction, {x, y}]) => 
+                ({
+                    direction,
+                    content: canvas.getCell(this.x + x, this.y + y),
+                    coords: { x: this.x + x, y: this.y + y },
+                    distance: []
+                }));
     }
 }
