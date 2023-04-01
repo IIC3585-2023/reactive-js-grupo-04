@@ -5,6 +5,7 @@ class Entity {
         this.x = x;
         this.y = y;
         this.size = size;
+        this.img = document.getElementById(id);
         this.speed = 1;
         this.direction = 'up';
         this.directionMap = {
@@ -12,7 +13,7 @@ class Entity {
             down: { x: 0, y: 1 },
             left: { x: -1, y: 0 },
             right: { x: 1, y: 0 }
-        }
+        };
         this.entity$ = null;
         this.suscription$ = null;
     }
@@ -28,10 +29,10 @@ class Entity {
     }
 
     suscribeEntity(canvas) {
-        // subscribe to the new observable
         if (!this.entity$) {
             throw new Error('Observable subject not declared.');
         }
+        // subscribe to the new observable
         this.suscription$ = this.entity$.subscribe(
             (direction) => {
                 if (!direction) return;
@@ -46,7 +47,7 @@ class Entity {
 
     unsuscribeEntity() {
         if (!this.suscription$) {
-            throw new Error('Observable subject not suscribed.');
+            throw new Error('Observable subject is not suscribed.');
         }
         this.suscription$.unsubscribe();
     }
@@ -67,7 +68,10 @@ class Player extends Entity{
         const interval$ = rxjs.interval(200);
         const keydown$ = rxjs.fromEvent(document, 'keydown');
         this.entity$ = rxjs
-            .merge(interval$, keydown$)
+            .merge(
+                interval$,
+                keydown$
+            )
             .pipe(
                 rxjs.operators.map((event) => {
                     if (event instanceof KeyboardEvent){

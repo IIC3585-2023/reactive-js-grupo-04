@@ -21,6 +21,8 @@ class Canvas {
         const boardWidth = this.arrayBoard[0].length * cellSize;
         this.canvas.height = boardHeight;
         this.canvas.width = boardWidth;
+        const imgTree = document.getElementById('tree');
+        const imgReward = (randomN) => document.getElementById(`reward${randomN}`);
         this.arrayBoard.map((row, rowIndex) => {
             row.map((cell, cellIndex) => {
                 this.context.fillStyle = cell === '#' ? '#fed7aa' : 'transparent';
@@ -31,14 +33,12 @@ class Canvas {
                     cellSize
                 );
                 if (cell === '#') {
-                    const img = document.getElementById('tree');
-                    this.drawImageOnCell(img, cellIndex, rowIndex);
+                    this.drawImageOnCell(imgTree, cellIndex, rowIndex);
                 }
                 if (cell === 'T') {
                     // get random number from {1, 2}
                     const randomN = Math.floor(Math.random() * 2) + 1
-                    const img = document.getElementById(`reward${randomN}`);
-                    this.drawImageOnCell(img, cellIndex, rowIndex);
+                    this.drawImageOnCell(imgReward(randomN), cellIndex, rowIndex);
                 }
             });
         });
@@ -55,8 +55,7 @@ class Canvas {
     }
 
     drawEntity(entity) {
-        const img = document.getElementById(entity.id);
-        this.drawImageOnCell(img, entity.x, entity.y);
+        this.drawImageOnCell(entity.img, entity.x, entity.y);
     }
 
     clearEntity(entity) {

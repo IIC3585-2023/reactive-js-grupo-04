@@ -46,7 +46,6 @@ const main = () => {
     const sizeCharacter = sizeCell;
     // player 1
     let { x, y } = canvas.getRandomValidCell();
-    console.log();
     const player1 = new Player("player1", x = x, y = y, size = sizeCharacter, KEYMAP.player1);
     players.push(player1);
 
