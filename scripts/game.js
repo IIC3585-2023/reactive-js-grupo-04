@@ -7,8 +7,9 @@ class Game {
     this.players = [];
     this.enemies = [];
     this.entities = [];
-    this._collision_subject = new rxjs.Subject();
+    this.move_subscription = null;
     this.fps = 30;
+    this._update_canvas_subject = new rxjs.Subject();
     this._clock_observable = new rxjs.interval(1000 / this.fps);
     this._keyboard_observable = new rxjs.fromEvent(document, "keydown").pipe(
       rxjs.operators.map((event) => {
@@ -26,46 +27,52 @@ class Game {
     this.addPlayersAndEnemies();
   }
 
+  subscribeToCanvasUpdate(callback) {
+    this._update_canvas_subject.subscribe(callback);
+  }
+
   checkPlayerRewardCollision(player) {
     const collisions = this.board.reward_data.filter(
       (reward_object) =>
-        player.position.x === reward_object.pos_x &&
-        player.position.y === reward_object.pos_y
+        player.getMapX() === reward_object.pos_x &&
+        player.getMapY() === reward_object.pos_y
     );
     if (collisions.length > 0) {
       player.has_ability = true;
       this.board.reward_data = this.board.reward_data.filter(
-        (reward_object) =>
-          player.position.x != reward_object.pos_x ||
-          player.position.y != reward_object.pos_y
+        (x) => !collisions.includes(x)
       );
-      this._collision_subject.next(player);
+      this._update_canvas_subject.next(this.entities);
     }
   }
 
+  refreshSubscription() {
+    this.move_subscription = rxjs
+      .merge(...this.entities.map((entity) => entity.position_subject))
+      .subscribe((entity) => {
+        this._update_canvas_subject.next(this.entities);
+        if (entity.id === "enemy1") this.checkPlayerEnemyCollision(entity);
+        if (entity.id === "player1") this.checkPlayerRewardCollision(entity);
+      });
+  }
+
   checkPlayerEnemyCollision(enemy) {
-    this.players.forEach((player, player_index) => {
+    this.players.forEach((player) => {
       if (
-        player.position.x === enemy.position.x &&
-        player.position.y === enemy.position.y
+        player.getMapX() === enemy.getMapX() &&
+        player.getMapY() === enemy.getMapY()
       ) {
         if (player.has_ability) {
-          this.killEnemy(enemy, player);
-          this.canvas.clearEntity(enemy);
+          this.killEnemy(enemy);
+          this._update_canvas_subject.next(this.entities);
+          if (this.enemies.length == 0) this.stopGame();
         } else {
-          this.stopGame();
+          this.killPlayer(player);
+          this._update_canvas_subject.next(this.entities);
+          if (this.players.length == 0) this.stopGame();
         }
       }
     });
-  }
-
-  checkPlayerCollisions(player) {
-    this.checkPlayerRewardCollision(player);
-    this.checkPlayerEnemyCollision(player);
-  }
-
-  subscribeToCollision(callback) {
-    this._collision_subject.subscribe(callback);
   }
 
   addPlayersAndEnemies() {
@@ -82,26 +89,12 @@ class Game {
     );
     this.players.push(player1);
     this.canvas.drawEntity(player1);
-    // player1.declareObservablePlayer();
-    // player1.suscribeEntity(this.canvas);
-    player1.subscribeToPosition((player) => {
-      this.checkPlayerRewardCollision(player);
-    });
     player1.clock_subscription = this._clock_observable.subscribe(() =>
-      player1.subscribeToMove(this.canvas)
+      player1.callbackMoveSignal(this.canvas, this.board)
     );
     player1.keyboard_subscription = this._keyboard_observable.subscribe(
-      (direction) => player1.subscribeToKeyboardEvent(direction)
+      (direction) => player1.callbackKeyboardEventSignal(direction)
     );
-
-    // // player 2
-    // ({ x, y } = canvas.getRandomValidCell());
-    // const player2 = new Player("player2", x = x, y = y, size = sizeCharacter, KEYMAP.player2);
-    // players.push(player2);
-    // canvas.drawEntity(player2);
-    // player2.declareObservablePlayer();
-    // player2.suscribeEntity(canvas);
-
     this.entities.push(...this.players);
 
     // enemy 1
@@ -112,18 +105,16 @@ class Game {
       x * sizeCharacter,
       y * sizeCharacter,
       sizeCharacter,
-      this.board,
       this.players
     );
-    this.entities.push(enemy1);
     this.enemies.push(enemy1);
+    this.entities.push(...this.enemies);
     this.canvas.drawEntity(enemy1);
-    enemy1.subscribeToPosition((enemy) => {
-      this.checkPlayerEnemyCollision(enemy);
-    });
     enemy1.clock_subscription = this._clock_observable.subscribe(() =>
-      enemy1.subscribeToMove(this.canvas)
+      enemy1.callbackMoveSignal(this.canvas, this.board)
     );
+
+    this.refreshSubscription();
 
     // // enemy 2
     // ({ x, y } = canvas.getRandomValidCell());
@@ -139,18 +130,43 @@ class Game {
     // let w = 1;
     // clicksOrTimer.subscribe((x) => console.log(++w));
   }
-  killEnemy(enemy, player) {
-    enemy.unsuscribeEntity();
-    this._collision_subject.next(player);
+
+  killEntity(entity) {
+    this.unsubscribeEntity(entity);
+    this.entities = this.entities.filter(
+      (array_entity) => entity.id != array_entity.id
+    );
+  }
+  killEnemy(enemy) {
+    this.killEntity(enemy);
+    this.enemies = this.enemies.filter(
+      (array_enemy) => enemy.id != array_enemy.id
+    );
   }
 
+  killPlayer(player) {
+    this.killEntity(player);
+    this.players = this.players.filter(
+      (array_player) => player.id != array_player.id
+    );
+  }
   stopGame() {
+    console.log("juego terminado");
+    if (this.players.length === 0) console.log("ganan malos");
+    else console.log("ganan bueno");
     this.unsubscribeAll();
   }
+
+  unsubscribeEntity(entity) {
+    this.move_subscription.unsubscribe();
+    this.refreshSubscription();
+    entity.unsubscribeEntity();
+  }
+
   unsubscribeAll() {
     let i = 0;
     this.entities.forEach((entity) => {
-      entity.unsuscribeEntity();
+      this.unsubscribeEntity(entity);
       i += 1;
     });
     console.log(`All entities unsubscribed: ${i}/${this.entities.length}`);

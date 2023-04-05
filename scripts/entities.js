@@ -1,5 +1,5 @@
 class Entity {
-  constructor(id, x, y, size, map) {
+  constructor(id, x, y, size) {
     this.id = id;
     this.position = { x: x, y: y };
     this.size = size;
@@ -17,31 +17,29 @@ class Entity {
     this.position_subject = new rxjs.Subject();
     this.clock_subscription = null;
     this.keyboard_subscription = null;
-    this.map = map;
   }
 
   #move() {
     const { x, y } = this.directionMap[this.directionMovement];
     this.position.x += x * this.speed;
     this.position.y += y * this.speed;
-    this.position_subject.next(this);
   }
 
-  checkWallCollission(direction) {
+  checkWallCollission(direction, board) {
     let is_collided = false;
     const { x, y } = this.directionMap[direction];
     if (
-      this.map.matrix_content[
+      board.matrix_content[
         parseInt((this.position.y + y * this.speed) / this.size)
       ][parseInt((this.position.x + x * this.speed) / this.size)] == "#" ||
-      this.map.matrix_content[
+      board.matrix_content[
         parseInt((this.position.y + y * this.speed) / this.size + 0.9999)
       ][parseInt((this.position.x + x * this.speed) / this.size)] == "#" ||
-      this.map.matrix_content[
+      board.matrix_content[
         parseInt((this.position.y + y * this.speed) / this.size)
       ][parseInt((this.position.x + x * this.speed) / this.size + 0.9999)] ==
         "#" ||
-      this.map.matrix_content[
+      board.matrix_content[
         parseInt((this.position.y + y * this.speed) / this.size + 0.9999)
       ][parseInt((this.position.x + x * this.speed) / this.size + 0.9999)] ==
         "#"
@@ -51,29 +49,22 @@ class Entity {
     return is_collided;
   }
 
-  subscribeToPosition(callback) {
-    this.position_subject.subscribe(callback);
-  }
-
   changeDirection(direction) {
     this.direction = direction;
   }
 
-  subscribeToKeyboardEvent(direction) {
+  callbackKeyboardEventSignal(direction) {
     this.directionKeyboard = direction;
   }
 
-  subscribeToMove(canvas) {
-    if (this.checkWallCollission(this.directionMovement)) {
-      return;
-    } else {
-      canvas.clearEntity(this);
+  callbackMoveSignal(canvas, board) {
+    if (!this.checkWallCollission(this.directionMovement, board)) {
       this.#move();
-      canvas.drawEntity(this);
     }
+    this.position_subject.next(this);
   }
 
-  unsuscribeEntity() {
+  unsubscribeEntity() {
     if (!this.clock_subscription) {
       throw new Error("Observable subject is not suscribed.");
     }
@@ -83,30 +74,40 @@ class Entity {
   toString() {
     return `${this.id}: (${this.position.x}, ${this.position.y})`;
   }
+
+  getMapX() {
+    let map_x = parseInt(this.position.x / this.size);
+    return map_x;
+  }
+
+  getMapY() {
+    let map_y = parseInt(this.position.y / this.size);
+    return map_y;
+  }
 }
 
 class Player extends Entity {
-  constructor(id, x, y, size, map, keymap) {
+  constructor(id, x, y, size, keymap) {
     super(id, x, y, size, map);
     this.keymap = keymap;
   }
 
-  subscribeToMove(canvas) {
-    if (!this.checkWallCollission(this.directionKeyboard)) {
+  callbackMoveSignal(canvas, board) {
+    if (!this.checkWallCollission(this.directionKeyboard, board)) {
       this.directionMovement = this.directionKeyboard;
     }
-    super.subscribeToMove(canvas);
+    super.callbackMoveSignal(canvas, board);
   }
 
-  unsuscribeEntity() {
-    super.unsuscribeEntity();
+  unsubscribeEntity() {
+    super.unsubscribeEntity();
     this.keyboard_subscription.unsubscribe();
   }
 }
 
 class Enemy extends Entity {
-  constructor(id, x, y, size, map, players) {
-    super(id, x, y, size, map);
+  constructor(id, x, y, size, players) {
+    super(id, x, y, size);
     this.playersArray = players;
     this.oppositeDirection = {
       up: "down",
@@ -114,18 +115,23 @@ class Enemy extends Entity {
       left: "right",
       right: "left",
     };
+    this.best_direction = { x: 1, y: 0 };
   }
 
-  subscribeToMove(canvas) {
-    if (this.checkWallCollission(this.directionMovement)) {
-      this.directionMovement = this.chooseDirection(canvas);
+  callbackMoveSignal(canvas, board) {
+    let best_direction = this.chooseDirection(canvas);
+    if (
+      !this.checkWallCollission(best_direction, board) &&
+      best_direction != this.best_direction
+    ) {
+      this.best_direction = best_direction;
+      this.directionMovement = best_direction;
     }
-    super.subscribeToMove(canvas);
+    super.callbackMoveSignal(canvas, board);
   }
 
   chooseDirection(canvas) {
     const surroundings = this.getSurroundings(canvas);
-    console.log(surroundings);
     let validSurroundings = surroundings.filter((surrounding) => {
       return surrounding.content !== "#";
     });
@@ -139,10 +145,10 @@ class Enemy extends Entity {
     });
 
     // with probability 0.2, return random direction
-    if (Math.random() < 0.2) {
-      const randomIndex = Math.floor(Math.random() * validSurroundings.length);
-      return validSurroundings[randomIndex].direction;
-    }
+    // if (Math.random() < 0.2) {
+    //   const randomIndex = Math.floor(Math.random() * validSurroundings.length);
+    //   return validSurroundings[randomIndex].direction;
+    // }
 
     // choose direction more close to the player
     if (this.playersArray) {

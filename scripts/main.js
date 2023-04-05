@@ -32,6 +32,9 @@ class MainScene {
     });
     this.newCanvas();
     this.start_button.addEventListener("click", this.startGame.bind(this));
+    window.addEventListener("beforeunload", (event) => {
+      this.unsubscribeAll();
+    });
   }
   newCanvas() {
     this.canvas = new Canvas(
@@ -47,13 +50,19 @@ class MainScene {
     this.map_select.setAttribute("disabled", true);
     this.players_select.setAttribute("disabled", true);
     this.start_button.setAttribute("disabled", true);
-    const game = new Game(this.board, this.sizeCell, this.canvas, this.keymaps); //game not initialiazed
-    game.init();
-    game.subscribeToCollision((entity_to_rerender) => {
-      this.canvas.drawEntity(entity_to_rerender);
-    });
+    this.game = new Game(this.board, this.sizeCell, this.canvas, this.keymaps); //game not initialiazed
+    this.game.init();
+    this.canvas.updateSubscription = this.game.subscribeToCanvasUpdate(
+      (entities) => {
+        this.canvas.update(entities);
+      }
+    );
     this.canvas_element.scrollIntoView();
     this.canvas_element.focus();
+  }
+  unsubscribeAll() {
+    this.canvas.unsubscribeAll();
+    if (this.game) this.game.unsubscribeAll();
   }
 }
 

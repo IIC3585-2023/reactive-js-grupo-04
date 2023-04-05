@@ -5,6 +5,7 @@ class Canvas {
     this.sizeCell = sizeCell;
     this.canvas = canvas;
     this.context = context;
+    this.updateSubscription = null;
   }
 
   drawMap() {
@@ -124,5 +125,12 @@ class Canvas {
   getRandomValidCell() {
     const randomIndex = Math.floor(Math.random() * this.validCells.length);
     return this.validCells[randomIndex];
+  }
+  update(entities) {
+    this.drawMap();
+    entities.forEach((entity) => this.drawEntity(entity));
+  }
+  unsubscribeAll() {
+    if (this.updateSubscription) this.updateSubscription.unsubscribe();
   }
 }
