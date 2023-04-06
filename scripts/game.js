@@ -9,7 +9,7 @@ class Game {
     this.enemies = [];
     this.entities = [];
     this.move_subscription = null;
-    this.fps = 30;
+    this.fps = 60;
     this.pathAssets = "./assets";
     this.audio_intro = new Audio(`${this.pathAssets}/intro.mp3`);
     this.audio_main = new Audio(`${this.pathAssets}/main.mp3`);
