@@ -112,7 +112,7 @@ class Player extends Entity {
       }
       this.img_count++;
       this.img = document.getElementById(this.id + "-" + this.img_count);
-    }, 400);
+    }, 200);
 
     // Stop the interval after 5 seconds
     setTimeout(() => {
