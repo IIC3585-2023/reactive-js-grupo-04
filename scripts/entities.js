@@ -25,28 +25,23 @@ class Entity {
     this.position.y += y * this.speed;
   }
 
-  checkWallCollission(direction, board) {
-    let is_collided = false;
-    const { x, y } = this.directionMap[direction];
-    if (
-      board.matrix_content[
-        parseInt((this.position.y + y * this.speed) / this.size)
-      ][parseInt((this.position.x + x * this.speed) / this.size)] == "#" ||
-      board.matrix_content[
-        parseInt((this.position.y + y * this.speed) / this.size + 0.9999)
-      ][parseInt((this.position.x + x * this.speed) / this.size)] == "#" ||
-      board.matrix_content[
-        parseInt((this.position.y + y * this.speed) / this.size)
-      ][parseInt((this.position.x + x * this.speed) / this.size + 0.9999)] ==
-        "#" ||
-      board.matrix_content[
-        parseInt((this.position.y + y * this.speed) / this.size + 0.9999)
-      ][parseInt((this.position.x + x * this.speed) / this.size + 0.9999)] ==
-        "#"
-    ) {
-      is_collided = true;
-    }
-    return is_collided;
+  getposBoard = (axis, direction) =>
+    (this.position[axis] + this.directionMap[direction][axis] * this.speed) /
+    this.size;
+
+  checkWallCollision(direction, board) {
+    const y = this.getposBoard("y", direction);
+    const x = this.getposBoard("x", direction);
+    const yPos = parseInt(y);
+    const xPos = parseInt(x);
+    const yPosNext = parseInt(y + 0.9999);
+    const xPosNext = parseInt(x + 0.9999);
+    return [
+      board.matrix_content[yPos][xPos],
+      board.matrix_content[yPosNext][xPos],
+      board.matrix_content[yPos][xPosNext],
+      board.matrix_content[yPosNext][xPosNext],
+    ].includes("#");
   }
 
   changeDirection(direction) {
@@ -58,7 +53,7 @@ class Entity {
   }
 
   callbackMoveSignal(board) {
-    if (!this.checkWallCollission(this.directionMovement, board)) {
+    if (!this.checkWallCollision(this.directionMovement, board)) {
       this.#move();
     }
     this.position_subject.next(this);
@@ -107,7 +102,7 @@ class Player extends Entity {
   }
 
   callbackMoveSignal(board) {
-    if (!this.checkWallCollission(this.directionKeyboard, board)) {
+    if (!this.checkWallCollision(this.directionKeyboard, board)) {
       this.directionMovement = this.directionKeyboard;
     }
     super.callbackMoveSignal(board);
@@ -175,7 +170,7 @@ class Enemy extends Entity {
   callbackMoveSignal(board, players_array) {
     let best_direction = this.chooseDirection(board, players_array);
     if (
-      !this.checkWallCollission(best_direction, board) &&
+      !this.checkWallCollision(best_direction, board) &&
       best_direction != this.best_direction
     ) {
       this.best_direction = best_direction;
@@ -253,12 +248,12 @@ class Enemy extends Entity {
     return Object.entries(this.directionMap).map(([direction, { x, y }]) => ({
       direction,
       content: board.getCell(
-        parseInt(this.position.x / this.size) + x,
-        parseInt(this.position.y / this.size) + y
+        parseInt(this.getMapX() + x),
+        parseInt(this.getMapY() + y)
       ),
       coords: {
-        x: parseInt(this.position.x / this.size) + x,
-        y: parseInt(this.position.y / this.size) + y,
+        x: parseInt(this.getMapX() + x),
+        y: parseInt(this.getMapY() + y),
       },
       distance: [],
     }));
