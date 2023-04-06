@@ -7,12 +7,12 @@
 
     <link rel="stylesheet" href="index.css" />
     <link
-        rel="stylesheet"
-        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
     />
     <!-- Rx js -->
     <script src="https://unpkg.com/rxjs@^7/dist/bundles/rxjs.umd.min.js"></script>
-    
+
     <script>
       const keyButton = (key) => {
         const keyEvent = new KeyboardEvent("keydown", {
@@ -25,14 +25,22 @@
       };
 
       // remove scrolling by arrow keys
-      window.addEventListener("keydown", function(e) {
-          if(["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"].indexOf(e.code) > -1) {
-              e.preventDefault();
+      window.addEventListener(
+        "keydown",
+        function (e) {
+          if (
+            ["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"].indexOf(
+              e.code
+            ) > -1
+          ) {
+            e.preventDefault();
           }
-      }, false);
+        },
+        false
+      );
     </script>
   </head>
-	<body>
+  <body>
     <main>
       <section class="container-logos">
         <img src="assets/hxh.png" alt="hxh" class="logo" />
@@ -50,65 +58,97 @@
           <option value="1">Solo</option>
           <option value="2">Coop</option>
         </select>
-        
+
         <button id="start-button" class="start-game button-start">
           Start Game
         </button>
       </section>
-      <canvas id="map"></canvas>
+      <section class="container-game-info" id="container-game-info">
+        <div class="container-player-lifes" id="player1-lifes">
+          <img id="player1-life1" src="assets/heart-player1-full.png" />
+          <img id="player1-life2" src="assets/heart-player1-full.png" />
+          <img id="player1-life3" src="assets/heart-player1-full.png" />
+        </div>
+        <div class="container-player-lifes" id="player2-lifes">
+          <img id="player2-life1" src="assets/heart-player2-full.png" hidden />
+          <img id="player2-life2" src="assets/heart-player2-full.png" hidden />
+          <img id="player2-life3" src="assets/heart-player2-full.png" hidden />
+        </div>
+      </section>
+      <canvas id="map" tabindex="0"></canvas>
       <section class="players">
         <div class="controls">
           1st Player
           <button class="key" onclick="keyButton('ArrowUp')">
-            <i class="fa fa-arrow-up">
-            </i>
+            <i class="fa fa-arrow-up"> </i>
           </button>
           <div class="inside-controls">
             <button class="key" onclick="keyButton('ArrowLeft')">
-              <i class="fa fa-arrow-left">
-              </i>
+              <i class="fa fa-arrow-left"> </i>
             </button>
             <button class="key" onclick="keyButton('ArrowDown')">
-              <i class="fa fa-arrow-down">
-              </i>
+              <i class="fa fa-arrow-down"> </i>
             </button>
             <button class="key" onclick="keyButton('ArrowRight')">
-              <i class="fa fa-arrow-right">
-              </i>
+              <i class="fa fa-arrow-right"> </i>
             </button>
           </div>
         </div>
         <div class="controls">
           2nd Player
-          <button class="key text-key" onclick="keyButton('w')">
-            w
-          </button>
+          <button class="key text-key" onclick="keyButton('w')">w</button>
           <div class="inside-controls">
-            <button class="key text-key" onclick="keyButton('a')">
-              a
-            </button>
-            <button class="key text-key" onclick="keyButton('s')">
-              s
-            </button>
-            <button class="key text-key" onclick="keyButton('d')">
-              d
-            </button>
+            <button class="key text-key" onclick="keyButton('a')">a</button>
+            <button class="key text-key" onclick="keyButton('s')">s</button>
+            <button class="key text-key" onclick="keyButton('d')">d</button>
           </div>
         </div>
       </section>
     </main>
-    <img id="player1" src="assets/gon.png" hidden style="display:none"/>
-    <img id="player2" src="assets/killua.png" hidden style="display:none"/>
-    <img id="enemy1" src="assets/hisoka.png" hidden style="display:none"/>
-    <img id="enemy2" src="assets/illumi.png" hidden style="display:none"/>
+    <img id="player1" src="assets/player1.png" hidden style="display: none" />
+    <img
+      id="player1-1"
+      src="assets/player1-1.png"
+      hidden
+      style="display: none"
+    />
+    <img
+      id="player1-2"
+      src="assets/player1-2.png"
+      hidden
+      style="display: none"
+    />
+    <img
+      id="player1-3"
+      src="assets/player1-3.png"
+      hidden
+      style="display: none"
+    />
+    <img
+      id="player1-4"
+      src="assets/player1-4.png"
+      hidden
+      style="display: none"
+    />
+    <img
+      id="player1-5"
+      src="assets/player1-5.png"
+      hidden
+      style="display: none"
+    />
 
-    <img id="reward1" src="assets/reward1.png" hidden style="display:none"/>
-    <img id="reward2" src="assets/reward2.png" hidden style="display:none"/>
-    <img id="tree" src="assets/tree.png" hidden style="display:none"/>
-	</body>
+    <img id="player2" src="assets/killua.png" hidden style="display: none" />
+    <img id="enemy1" src="assets/hisoka.png" hidden style="display: none" />
+    <img id="enemy2" src="assets/illumi.png" hidden style="display: none" />
+
+    <img id="reward1" src="assets/reward1.png" hidden style="display: none" />
+    <img id="reward2" src="assets/reward2.png" hidden style="display: none" />
+    <img id="tree" src="assets/tree.png" hidden style="display: none" />
+  </body>
   <!-- scripts -->
   <script src="scripts/boards.js"></script>
   <script src="scripts/canvas.js"></script>
   <script src="scripts/entities.js"></script>
+  <script src="scripts/game.js"></script>
   <script src="scripts/main.js"></script>
 </html>
