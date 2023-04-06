@@ -51,6 +51,10 @@ class Board {
     const randomIndex = Math.floor(Math.random() * validCells.length);
     return validCells[randomIndex];
   }
+
+  restart() {
+    this.reward_data = this.chooseRandomRewards();
+  }
 }
 
 const BOARDS = [
