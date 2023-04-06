@@ -71,12 +71,12 @@ class MainScene {
       this.canvas,
       this.keymaps
     ); //game not initialiazed
-    this.game.init();
     this.canvas.updateSubscription = this.game.subscribeToCanvasUpdate(
       (entities) => {
         this.canvas.update(entities);
       }
     );
+    this.game.init();
     document.getElementById("container-game-info").scrollIntoView();
     this.canvas_element.focus();
   }

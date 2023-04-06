@@ -1,7 +1,6 @@
 class Canvas {
   constructor(board, sizeCell, canvas, context) {
     this.board = board;
-    this.validCells = this.getValidCells();
     this.sizeCell = sizeCell;
     this.canvas = canvas;
     this.context = context;
@@ -29,7 +28,6 @@ class Canvas {
         }
       });
     });
-    this.drawRewards();
   }
 
   drawRewards() {
@@ -63,20 +61,6 @@ class Canvas {
     );
   }
 
-  clearEntity(entity) {
-    const { x, y } = this.getCoordinates(entity.position.x, entity.position.y);
-    this.context.clearRect(
-      entity.position.x,
-      entity.position.y,
-      this.sizeCell,
-      this.sizeCell
-    );
-  }
-
-  getCell(x, y) {
-    return this.board.matrix_content[y][x];
-  }
-
   getNextEntityCell(entity) {
     const board = this.board;
     switch (entity.direction) {
@@ -106,27 +90,9 @@ class Canvas {
     };
   }
 
-  getValidCells() {
-    const validCells = [];
-    this.board.matrix_content.map((row, rowIndex) => {
-      row.map((cell, cellIndex) => {
-        if (cell === ".") {
-          validCells.push({
-            x: cellIndex,
-            y: rowIndex,
-          });
-        }
-      });
-    });
-    return validCells;
-  }
-
-  getRandomValidCell() {
-    const randomIndex = Math.floor(Math.random() * this.validCells.length);
-    return this.validCells[randomIndex];
-  }
   update(entities) {
     this.drawMap();
+    this.drawRewards();
     entities.forEach((entity) => this.drawEntity(entity));
   }
   unsubscribeAll() {

@@ -57,7 +57,7 @@ class Entity {
     this.directionKeyboard = direction;
   }
 
-  callbackMoveSignal(canvas, board) {
+  callbackMoveSignal(board) {
     if (!this.checkWallCollission(this.directionMovement, board)) {
       this.#move();
     }
@@ -90,16 +90,17 @@ class Player extends Entity {
   constructor(id, x, y, size, keymap) {
     super(id, x, y, size);
     this.keymap = keymap;
+    this.ability_animation_speed = 200;
     this.ability_duration = 6000;
     this.lifes = 3;
     this.img_count = 1;
   }
 
-  callbackMoveSignal(canvas, board) {
+  callbackMoveSignal(board) {
     if (!this.checkWallCollission(this.directionKeyboard, board)) {
       this.directionMovement = this.directionKeyboard;
     }
-    super.callbackMoveSignal(canvas, board);
+    super.callbackMoveSignal(board);
   }
 
   activatePower() {
@@ -112,7 +113,7 @@ class Player extends Entity {
       }
       this.img_count++;
       this.img = document.getElementById(this.id + "-" + this.img_count);
-    }, 200);
+    }, this.ability_animation_speed);
 
     // Stop the interval after 5 seconds
     setTimeout(() => {
@@ -153,7 +154,7 @@ class Player extends Entity {
 class Enemy extends Entity {
   constructor(id, x, y, size, players) {
     super(id, x, y, size);
-    this.playersArray = players;
+
     this.oppositeDirection = {
       up: "down",
       down: "up",
@@ -163,8 +164,8 @@ class Enemy extends Entity {
     this.best_direction = { x: 1, y: 0 };
   }
 
-  callbackMoveSignal(canvas, board) {
-    let best_direction = this.chooseDirection(canvas);
+  callbackMoveSignal(board, players_array) {
+    let best_direction = this.chooseDirection(board, players_array);
     if (
       !this.checkWallCollission(best_direction, board) &&
       best_direction != this.best_direction
@@ -172,12 +173,12 @@ class Enemy extends Entity {
       this.best_direction = best_direction;
       this.directionMovement = best_direction;
     }
-    super.callbackMoveSignal(canvas, board);
+    super.callbackMoveSignal(board);
   }
 
-  checkCollisionWithPlayers() {
+  checkCollisionWithPlayers(players_array) {
     let collision_entity_to_die = null;
-    this.playersArray.every((player) => {
+    players_array.every((player) => {
       if (
         player.getMapX() === this.getMapX() &&
         player.getMapY() === this.getMapY()
@@ -192,8 +193,8 @@ class Enemy extends Entity {
     return collision_entity_to_die;
   }
 
-  chooseDirection(canvas) {
-    const surroundings = this.getSurroundings(canvas);
+  chooseDirection(board, players_array) {
+    const surroundings = this.getSurroundings(board);
     let validSurroundings = surroundings.filter((surrounding) => {
       return surrounding.content !== "#";
     });
@@ -215,8 +216,8 @@ class Enemy extends Entity {
     // }
 
     // choose direction more close to the player
-    if (this.playersArray) {
-      this.playersArray.forEach((player) => {
+    if (players_array) {
+      players_array.forEach((player) => {
         // absolute value of the distance between the player and the enemy
         // root((x2 - x1)^2 + (y2 - y1)^2)
         validSurroundings.forEach((surrounding) => {
@@ -240,10 +241,10 @@ class Enemy extends Entity {
     return min ? min.direction : this.direction;
   }
 
-  getSurroundings(canvas) {
+  getSurroundings(board) {
     return Object.entries(this.directionMap).map(([direction, { x, y }]) => ({
       direction,
-      content: canvas.getCell(
+      content: board.getCell(
         parseInt(this.position.x / this.size) + x,
         parseInt(this.position.y / this.size) + y
       ),

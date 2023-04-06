@@ -10,6 +10,9 @@ class Game {
     this.entities = [];
     this.move_subscription = null;
     this.fps = 30;
+    this.audio_intro = new Audio("../assets/intro.mp3");
+    this.audio_main = new Audio("../assets/main.mp3");
+    this.audio_main.loop = true;
     this._update_canvas_subject = new rxjs.Subject();
     this._clock_observable = new rxjs.interval(1000 / this.fps);
     this._keyboard_observable = new rxjs.fromEvent(document, "keydown").pipe(
@@ -35,15 +38,17 @@ class Game {
   checkEntitiesCollissions(entity) {
     this._update_canvas_subject.next(this.entities);
     if (entity.id === "enemy1") {
-      let result_of_collission = entity.checkCollisionWithPlayers();
-      if (result_of_collission) {
-        if (result_of_collission.id === entity.id) {
+      let collision_entity_to_die = entity.checkCollisionWithPlayers(
+        this.players
+      );
+      if (collision_entity_to_die) {
+        if (collision_entity_to_die.id === entity.id) {
           // enemy has to die
           this.killEnemy(entity);
           this._update_canvas_subject.next(this.entities);
           if (this.enemies.length == 0) this.stopGame();
         } else {
-          this.killPlayer(result_of_collission);
+          this.killPlayer(collision_entity_to_die);
           this._update_canvas_subject.next(this.entities);
           if (this.players.length == 0) this.stopGame();
         }
@@ -67,7 +72,7 @@ class Game {
   addPlayersAndEnemies() {
     const sizeCharacter = this.sizeCell;
     // player 1
-    let { x, y } = this.canvas.getRandomValidCell();
+    let { x, y } = this.board.getRandomValidCell();
     const player1 = new Player(
       "player1",
       x * sizeCharacter,
@@ -76,17 +81,10 @@ class Game {
       this.keymaps.player1
     );
     this.players.push(player1);
-    this.canvas.drawEntity(player1);
-    player1.clock_subscription = this._clock_observable.subscribe(() =>
-      player1.callbackMoveSignal(this.canvas, this.board)
-    );
-    player1.keyboard_subscription = this._keyboard_observable.subscribe(
-      (direction) => player1.callbackKeyboardEventSignal(direction)
-    );
     this.entities.push(...this.players);
 
     // enemy 1
-    ({ x, y } = this.canvas.getRandomValidCell());
+    ({ x, y } = this.board.getRandomValidCell());
 
     const enemy1 = new Enemy(
       "enemy1",
@@ -97,12 +95,24 @@ class Game {
     );
     this.enemies.push(enemy1);
     this.entities.push(...this.enemies);
-    this.canvas.drawEntity(enemy1);
-    enemy1.clock_subscription = this._clock_observable.subscribe(() =>
-      enemy1.callbackMoveSignal(this.canvas, this.board)
-    );
+    this._update_canvas_subject.next(this.entities);
 
-    this.refreshSubscription();
+    this.audio_intro.play();
+
+    this.audio_intro.addEventListener("ended", () => {
+      console.log(this);
+      player1.clock_subscription = this._clock_observable.subscribe(() =>
+        player1.callbackMoveSignal(this.board)
+      );
+      player1.keyboard_subscription = this._keyboard_observable.subscribe(
+        (direction) => player1.callbackKeyboardEventSignal(direction)
+      );
+      enemy1.clock_subscription = this._clock_observable.subscribe(() =>
+        enemy1.callbackMoveSignal(this.board, this.players)
+      );
+      this.refreshSubscription();
+      this.audio_main.play();
+    });
   }
 
   killEntity(entity) {
@@ -121,7 +131,7 @@ class Game {
   killPlayer(player) {
     player.takeDamage();
     if (player.lifes > 0) {
-      let { x, y } = this.canvas.getRandomValidCell();
+      let { x, y } = this.board.getRandomValidCell();
       player.position.x = x * player.size;
       player.position.y = y * player.size;
     } else {
@@ -131,7 +141,9 @@ class Game {
       );
     }
   }
+
   stopGame() {
+    this.audio_main.pause();
     this.unsubscribeAll();
   }
 
