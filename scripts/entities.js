@@ -90,7 +90,9 @@ class Player extends Entity {
   constructor(id, x, y, size, keymap) {
     super(id, x, y, size);
     this.keymap = keymap;
+    this.ability_duration = 6000;
     this.lifes = 3;
+    this.img_count = 1;
   }
 
   callbackMoveSignal(canvas, board) {
@@ -98,6 +100,26 @@ class Player extends Entity {
       this.directionMovement = this.directionKeyboard;
     }
     super.callbackMoveSignal(canvas, board);
+  }
+
+  activatePower() {
+    this.has_ability = true;
+    this.img = document.getElementById(this.id + "-" + this.img_count);
+    // Start the interval
+    const intervalId = setInterval(() => {
+      if (this.img_count == 5) {
+        this.img_count = 0;
+      }
+      this.img_count++;
+      this.img = document.getElementById(this.id + "-" + this.img_count);
+    }, 400);
+
+    // Stop the interval after 5 seconds
+    setTimeout(() => {
+      clearInterval(intervalId); // Stop the interval
+      this.has_ability = false;
+      this.img = document.getElementById(this.id);
+    }, this.ability_duration);
   }
 
   takeDamage() {
@@ -113,7 +135,7 @@ class Player extends Entity {
         this.getMapY() === reward_object.pos_y
     );
     if (collisions.length > 0) {
-      this.has_ability = true;
+      this.activatePower();
       board.reward_data = board.reward_data.filter(
         (x) => !collisions.includes(x)
       );
