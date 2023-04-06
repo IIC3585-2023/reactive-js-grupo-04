@@ -203,7 +203,9 @@ class Enemy extends Entity {
 
     // remove the oposite direction
     validSurroundings = validSurroundings.filter((surrounding) => {
-      return surrounding.direction !== this.oppositeDirection[this.direction];
+      return (
+        surrounding.direction !== this.oppositeDirection[this.directionMovement]
+      );
     });
 
     // with probability 0.2, return random direction

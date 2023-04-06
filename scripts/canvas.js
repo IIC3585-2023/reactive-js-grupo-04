@@ -61,7 +61,6 @@ class Canvas {
       this.sizeCell,
       this.sizeCell
     );
-    this.drawRewards();
   }
 
   clearEntity(entity) {
