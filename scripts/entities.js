@@ -84,6 +84,16 @@ class Entity {
     let map_y = parseInt(this.position.y / this.size);
     return map_y;
   }
+
+  getMapCenterX() {
+    let map_x = parseInt((this.position.x + this.size / 2) / this.size);
+    return map_x;
+  }
+
+  getMapCenterY() {
+    let map_y = parseInt((this.position.y + this.size / 2) / this.size);
+    return map_y;
+  }
 }
 
 class Player extends Entity {
@@ -124,16 +134,14 @@ class Player extends Entity {
   }
 
   takeDamage() {
-    let heart_element = document.getElementById(this.id + "-life" + this.lifes);
-    heart_element.src = "../assets/heart-" + this.id + "-empty.png";
     this.lifes -= 1;
   }
 
   checkPlayerRewardCollision(board) {
     const collisions = board.reward_data.filter(
       (reward_object) =>
-        this.getMapX() === reward_object.pos_x &&
-        this.getMapY() === reward_object.pos_y
+        this.getMapCenterX() === reward_object.pos_x &&
+        this.getMapCenterY() === reward_object.pos_y
     );
     if (collisions.length > 0) {
       this.activatePower();
@@ -180,8 +188,8 @@ class Enemy extends Entity {
     let collision_entity_to_die = null;
     players_array.every((player) => {
       if (
-        player.getMapX() === this.getMapX() &&
-        player.getMapY() === this.getMapY()
+        player.getMapCenterX() === this.getMapCenterX() &&
+        player.getMapCenterY() === this.getMapCenterY()
       ) {
         if (player.has_ability) {
           collision_entity_to_die = this;

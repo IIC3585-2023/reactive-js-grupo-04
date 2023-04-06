@@ -25,6 +25,7 @@ class MainScene {
     this.mode = 1;
     this.canvas = null;
     this.game = null;
+    this.game_ended_signal_subcription = null;
   }
   init() {
     this.map_select.addEventListener("change", (e) => {
@@ -61,9 +62,9 @@ class MainScene {
     this.canvas.drawMap();
   }
   startGame() {
-    this.map_select.setAttribute("disabled", true);
-    this.players_select.setAttribute("disabled", true);
-    this.start_button.setAttribute("disabled", true);
+    this.map_select.disabled = true;
+    this.players_select.disabled = true;
+    this.start_button.disabled = true;
     this.game = new Game(
       this.board,
       this.mode,
@@ -74,6 +75,14 @@ class MainScene {
     this.canvas.updateSubscription = this.game.subscribeToCanvasUpdate(
       (entities) => {
         this.canvas.update(entities);
+      }
+    );
+    this.game_ended_signal_subcription = this.game.subscribeToEndedGame(
+      (result) => {
+        this.map_select.disabled = false;
+        this.players_select.disabled = false;
+        this.start_button.disabled = false;
+        this.canvas.drawMap();
       }
     );
     this.game.init();

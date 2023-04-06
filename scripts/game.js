@@ -14,6 +14,7 @@ class Game {
     this.audio_main = new Audio("../assets/main.mp3");
     this.audio_main.loop = true;
     this._update_canvas_subject = new rxjs.Subject();
+    this._end_game_subject = new rxjs.Subject();
     this._clock_observable = new rxjs.interval(1000 / this.fps);
     this._keyboard_observable = new rxjs.fromEvent(document, "keydown").pipe(
       rxjs.operators.map((event) => {
@@ -33,6 +34,10 @@ class Game {
 
   subscribeToCanvasUpdate(callback) {
     this._update_canvas_subject.subscribe(callback);
+  }
+
+  subscribeToEndedGame(callback) {
+    this._end_game_subject.subscribe(callback);
   }
 
   checkEntitiesCollissions(entity) {
@@ -70,6 +75,7 @@ class Game {
   }
 
   addPlayersAndEnemies() {
+    this.audio_intro.play();
     const sizeCharacter = this.sizeCell;
     // player 1
     let { x, y } = this.board.getRandomValidCell();
@@ -97,10 +103,8 @@ class Game {
     this.entities.push(...this.enemies);
     this._update_canvas_subject.next(this.entities);
 
-    this.audio_intro.play();
-
     this.audio_intro.addEventListener("ended", () => {
-      console.log(this);
+      this.audio_main.play();
       player1.clock_subscription = this._clock_observable.subscribe(() =>
         player1.callbackMoveSignal(this.board)
       );
@@ -111,7 +115,6 @@ class Game {
         enemy1.callbackMoveSignal(this.board, this.players)
       );
       this.refreshSubscription();
-      this.audio_main.play();
     });
   }
 
@@ -130,6 +133,8 @@ class Game {
 
   killPlayer(player) {
     player.takeDamage();
+    document.getElementById(player.id + "-life" + (player.lifes + 1)).src =
+      "../assets/heart-" + player.id + "-empty.png";
     if (player.lifes > 0) {
       let { x, y } = this.board.getRandomValidCell();
       player.position.x = x * player.size;
@@ -144,7 +149,20 @@ class Game {
 
   stopGame() {
     this.audio_main.pause();
+    this.restartHeartSprites();
     this.unsubscribeAll();
+    let result = this.players.length > 0 ? "p-win" : "e-win";
+    this._end_game_subject.next(result);
+  }
+
+  restartHeartSprites() {
+    for (let player_number = 1; player_number < 2; player_number++) {
+      for (let heart_number = 1; heart_number < 4; heart_number++) {
+        document.getElementById(
+          "player" + player_number + "-life" + heart_number
+        ).src = "../assets/heart-" + "player" + player_number + "-full.png";
+      }
+    }
   }
 
   unsubscribeEntity(entity) {
