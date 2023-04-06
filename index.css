@@ -48,10 +48,15 @@ body {
   color: var(--text-color);
 }
 
+.canvas-container {
+  position: relative;
+}
+
 #map {
   border: 3px solid var(--bg-color-3);
   width: 100%;
   max-height: 600px;
+  position: relative;
 }
 
 @media (max-width: 768px) {
@@ -214,4 +219,21 @@ body {
 .container-player-lifes img {
   width: 40px;
   height: auto;
+}
+
+#timer {
+  display: none;
+  position: absolute;
+  width: 100%;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  top: 45%;
+}
+
+#timer span {
+  font-size: 3.5em;
+  font-weight: bold;
+  color: #f5f5f5;
+  text-shadow: 0 0 10px #000;
 }

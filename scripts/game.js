@@ -1,9 +1,10 @@
 class Game {
-  constructor(board, mode, sizeCell, canvas, keymaps) {
+  constructor(board, mode, sizeCell, canvas, timer, keymaps) {
     this.board = board;
     this.mode = mode;
     this.sizeCell = sizeCell;
     this.canvas = canvas;
+    this.timer = timer;
     this.keymaps = keymaps;
     this.players = [];
     this.enemies = [];
@@ -77,6 +78,7 @@ class Game {
 
   addPlayersAndEnemies() {
     this.audio_intro.play();
+    this.startTimer();
     const sizeCharacter = this.sizeCell;
     // player 1
     let { x, y } = this.board.getRandomValidCell();
@@ -116,6 +118,39 @@ class Game {
         enemy1.callbackMoveSignal(this.board, this.players)
       );
       this.refreshSubscription();
+    });
+  }
+
+  changeTime = (time) => {
+    if (time > 0) {
+      this.timer.children[0].innerHTML = `Ready? ${time}`;
+    }
+    else {
+      this.timer.children[0].innerHTML = "Go!"
+    }
+  };
+
+  startTimer() {
+    this.timer.style = "display: flex";
+    const seconds = 10;
+    const subjectTimer = rxjs
+      .interval(10)
+      .pipe(
+        rxjs.operators.map((x) => seconds * 100 - x),
+        rxjs.operators.take(seconds * 100 + 1),
+        rxjs.operators.map(
+          (x) =>
+            `${Math.floor(x / 100)}.${(x % 100).toString().padStart(2, "0")}`
+        )
+      )
+      .subscribe(this.changeTime);
+
+    setTimeout(() => {
+      subjectTimer.unsubscribe();
+      this.timer.style = "display: none";
+    }, seconds * 1000 + 1000);
+    addEventListener("unload", () => {
+      subjectTimer.unsubscribe();
     });
   }
 
