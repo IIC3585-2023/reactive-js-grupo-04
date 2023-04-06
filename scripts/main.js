@@ -22,6 +22,7 @@ class MainScene {
     this.start_button = start_button;
     this.keymaps = keymaps;
     this.board = new Board(boards[0].board);
+    this.mode = 1;
     this.canvas = null;
     this.game = null;
   }
@@ -29,6 +30,19 @@ class MainScene {
     this.map_select.addEventListener("change", (e) => {
       this.board = new Board(this.boards[e.target.value].board);
       this.newCanvas();
+    });
+    this.players_select.addEventListener("change", (e) => {
+      this.mode = e.target.value;
+      if (this.mode == 1) {
+        for (let i = 1; i <= 3; i++) {
+          document.getElementById("player2-life" + i).hidden = true;
+        }
+      }
+      if (this.mode == 2) {
+        for (let i = 1; i <= 3; i++) {
+          document.getElementById("player2-life" + i).hidden = false;
+        }
+      }
     });
     this.newCanvas();
     this.start_button.addEventListener("click", this.startGame.bind(this));
@@ -50,14 +64,20 @@ class MainScene {
     this.map_select.setAttribute("disabled", true);
     this.players_select.setAttribute("disabled", true);
     this.start_button.setAttribute("disabled", true);
-    this.game = new Game(this.board, this.sizeCell, this.canvas, this.keymaps); //game not initialiazed
+    this.game = new Game(
+      this.board,
+      this.mode,
+      this.sizeCell,
+      this.canvas,
+      this.keymaps
+    ); //game not initialiazed
     this.game.init();
     this.canvas.updateSubscription = this.game.subscribeToCanvasUpdate(
       (entities) => {
         this.canvas.update(entities);
       }
     );
-    this.canvas_element.scrollIntoView();
+    document.getElementById("container-game-info").scrollIntoView();
     this.canvas_element.focus();
   }
   unsubscribeAll() {

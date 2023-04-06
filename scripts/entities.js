@@ -88,8 +88,9 @@ class Entity {
 
 class Player extends Entity {
   constructor(id, x, y, size, keymap) {
-    super(id, x, y, size, map);
+    super(id, x, y, size);
     this.keymap = keymap;
+    this.lifes = 3;
   }
 
   callbackMoveSignal(canvas, board) {
@@ -97,6 +98,28 @@ class Player extends Entity {
       this.directionMovement = this.directionKeyboard;
     }
     super.callbackMoveSignal(canvas, board);
+  }
+
+  takeDamage() {
+    let heart_element = document.getElementById(this.id + "-life" + this.lifes);
+    heart_element.src = "../assets/heart-" + this.id + "-empty.png";
+    this.lifes -= 1;
+  }
+
+  checkPlayerRewardCollision(board) {
+    const collisions = board.reward_data.filter(
+      (reward_object) =>
+        this.getMapX() === reward_object.pos_x &&
+        this.getMapY() === reward_object.pos_y
+    );
+    if (collisions.length > 0) {
+      this.has_ability = true;
+      board.reward_data = board.reward_data.filter(
+        (x) => !collisions.includes(x)
+      );
+      return true;
+    }
+    return false;
   }
 
   unsubscribeEntity() {
@@ -128,6 +151,23 @@ class Enemy extends Entity {
       this.directionMovement = best_direction;
     }
     super.callbackMoveSignal(canvas, board);
+  }
+
+  checkCollisionWithPlayers() {
+    let collision_entity_to_die = null;
+    this.playersArray.every((player) => {
+      if (
+        player.getMapX() === this.getMapX() &&
+        player.getMapY() === this.getMapY()
+      ) {
+        if (player.has_ability) {
+          collision_entity_to_die = this;
+        } else {
+          collision_entity_to_die = player;
+        }
+      }
+    });
+    return collision_entity_to_die;
   }
 
   chooseDirection(canvas) {

@@ -1,6 +1,7 @@
 class Game {
-  constructor(board, sizeCell, canvas, keymaps) {
+  constructor(board, mode, sizeCell, canvas, keymaps) {
     this.board = board;
+    this.mode = mode;
     this.sizeCell = sizeCell;
     this.canvas = canvas;
     this.keymaps = keymaps;
@@ -31,18 +32,27 @@ class Game {
     this._update_canvas_subject.subscribe(callback);
   }
 
-  checkPlayerRewardCollision(player) {
-    const collisions = this.board.reward_data.filter(
-      (reward_object) =>
-        player.getMapX() === reward_object.pos_x &&
-        player.getMapY() === reward_object.pos_y
-    );
-    if (collisions.length > 0) {
-      player.has_ability = true;
-      this.board.reward_data = this.board.reward_data.filter(
-        (x) => !collisions.includes(x)
-      );
-      this._update_canvas_subject.next(this.entities);
+  checkEntitiesCollissions(entity) {
+    this._update_canvas_subject.next(this.entities);
+    if (entity.id === "enemy1") {
+      let result_of_collission = entity.checkCollisionWithPlayers();
+      if (result_of_collission) {
+        if (result_of_collission.id === entity.id) {
+          // enemy has to die
+          this.killEnemy(entity);
+          this._update_canvas_subject.next(this.entities);
+          if (this.enemies.length == 0) this.stopGame();
+        } else {
+          this.killPlayer(result_of_collission);
+          this._update_canvas_subject.next(this.entities);
+          if (this.players.length == 0) this.stopGame();
+        }
+      }
+    }
+    if (entity.id === "player1") {
+      if (entity.checkPlayerRewardCollision(this.board)) {
+        this._update_canvas_subject.next(this.entities);
+      }
     }
   }
 
@@ -50,29 +60,8 @@ class Game {
     this.move_subscription = rxjs
       .merge(...this.entities.map((entity) => entity.position_subject))
       .subscribe((entity) => {
-        this._update_canvas_subject.next(this.entities);
-        if (entity.id === "enemy1") this.checkPlayerEnemyCollision(entity);
-        if (entity.id === "player1") this.checkPlayerRewardCollision(entity);
+        this.checkEntitiesCollissions(entity);
       });
-  }
-
-  checkPlayerEnemyCollision(enemy) {
-    this.players.forEach((player) => {
-      if (
-        player.getMapX() === enemy.getMapX() &&
-        player.getMapY() === enemy.getMapY()
-      ) {
-        if (player.has_ability) {
-          this.killEnemy(enemy);
-          this._update_canvas_subject.next(this.entities);
-          if (this.enemies.length == 0) this.stopGame();
-        } else {
-          this.killPlayer(player);
-          this._update_canvas_subject.next(this.entities);
-          if (this.players.length == 0) this.stopGame();
-        }
-      }
-    });
   }
 
   addPlayersAndEnemies() {
@@ -84,7 +73,6 @@ class Game {
       x * sizeCharacter,
       y * sizeCharacter,
       sizeCharacter,
-      this.board,
       this.keymaps.player1
     );
     this.players.push(player1);
@@ -115,20 +103,6 @@ class Game {
     );
 
     this.refreshSubscription();
-
-    // // enemy 2
-    // ({ x, y } = canvas.getRandomValidCell());
-    // const enemy2 = new Enemy("enemy2", x = x, y = y, size = sizeCharacter, players);
-    // entities.push(enemy2);
-    // canvas.drawEntity(enemy2);
-    // enemy2.declareObservableEnemy(canvas);
-    // enemy2.suscribeEntity(canvas);
-    // const clicksOrTimer = rxjs.concat(
-    //   enemy1.position_subject,
-    //   player1.position_subject
-    // );
-    // let w = 1;
-    // clicksOrTimer.subscribe((x) => console.log(++w));
   }
 
   killEntity(entity) {
@@ -145,15 +119,19 @@ class Game {
   }
 
   killPlayer(player) {
-    this.killEntity(player);
-    this.players = this.players.filter(
-      (array_player) => player.id != array_player.id
-    );
+    player.takeDamage();
+    if (player.lifes > 0) {
+      let { x, y } = this.canvas.getRandomValidCell();
+      player.position.x = x * player.size;
+      player.position.y = y * player.size;
+    } else {
+      this.killEntity(player);
+      this.players = this.players.filter(
+        (array_player) => player.id != array_player.id
+      );
+    }
   }
   stopGame() {
-    console.log("juego terminado");
-    if (this.players.length === 0) console.log("ganan malos");
-    else console.log("ganan bueno");
     this.unsubscribeAll();
   }
 
@@ -166,9 +144,10 @@ class Game {
   unsubscribeAll() {
     let i = 0;
     this.entities.forEach((entity) => {
-      this.unsubscribeEntity(entity);
+      entity.unsubscribeEntity();
       i += 1;
     });
+    if (this.move_subscription) this.move_subscription.unsubscribe();
     console.log(`All entities unsubscribed: ${i}/${this.entities.length}`);
   }
 }
