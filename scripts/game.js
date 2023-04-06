@@ -9,9 +9,9 @@ class Game {
     this.enemies = [];
     this.entities = [];
     this.move_subscription = null;
-    this.fps = 30;
-    this.audio_intro = new Audio("../assets/intro.mp3");
-    this.audio_main = new Audio("../assets/main.mp3");
+    this.fps = 60;
+    this.audio_intro = new Audio("assets/intro.mp3");
+    this.audio_main = new Audio("assets/main.mp3");
     this.audio_main.loop = true;
     this._update_canvas_subject = new rxjs.Subject();
     this._end_game_subject = new rxjs.Subject();
@@ -134,7 +134,7 @@ class Game {
   killPlayer(player) {
     player.takeDamage();
     document.getElementById(player.id + "-life" + (player.lifes + 1)).src =
-      "../assets/heart-" + player.id + "-empty.png";
+      "assets/heart-" + player.id + "-empty.png";
     if (player.lifes > 0) {
       let { x, y } = this.board.getRandomValidCell();
       player.position.x = x * player.size;
@@ -160,7 +160,7 @@ class Game {
       for (let heart_number = 1; heart_number < 4; heart_number++) {
         document.getElementById(
           "player" + player_number + "-life" + heart_number
-        ).src = "../assets/heart-" + "player" + player_number + "-full.png";
+        ).src = "assets/heart-" + "player" + player_number + "-full.png";
       }
     }
   }
