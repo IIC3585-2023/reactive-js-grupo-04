@@ -151,6 +151,7 @@ class Game {
     this.audio_main.pause();
     this.restartHeartSprites();
     this.unsubscribeAll();
+    this.board.restart();
     let result = this.players.length > 0 ? "p-win" : "e-win";
     this._end_game_subject.next(result);
   }
