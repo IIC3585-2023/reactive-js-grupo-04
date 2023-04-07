@@ -233,6 +233,15 @@ class Game {
     this._end_game_subject.next(result);
   }
 
+  restartGame() {
+    this.audio_main.pause();
+    this.restartHeartSprites();
+    this.unsubscribeAll();
+    this.board.restart();
+    let result = this.players.length > 0 ? "p-win" : "e-win";
+    this._end_game_subject.next(result);
+  }
+
   restartHeartSprites() {
     for (let player_number = 1; player_number < 2; player_number++) {
       for (let heart_number = 1; heart_number < 4; heart_number++) {

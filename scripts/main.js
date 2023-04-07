@@ -7,6 +7,7 @@ class MainScene {
     map_select,
     players_select,
     start_button,
+    restart_button,
     keymaps
   ) {
     this.boards = boards;
@@ -16,6 +17,7 @@ class MainScene {
     this.map_select = map_select;
     this.players_select = players_select;
     this.start_button = start_button;
+    this.restart_button = restart_button;
     this.keymaps = keymaps;
     this.board = new Board(boards[0].board);
     this.mode = 1;
@@ -42,6 +44,7 @@ class MainScene {
       }
     });
     this.newCanvas();
+    this.restart_button.addEventListener("click", this.restartGame.bind(this));
     this.start_button.addEventListener("click", this.startGame.bind(this));
     window.addEventListener("beforeunload", (event) => {
       this.unsubscribeAll();
@@ -57,10 +60,16 @@ class MainScene {
 
     this.canvas.drawMap();
   }
+  restartGame(){
+    if (this.game != null){
+      this.game.restartGame();
+    }
+  }
   startGame() {
     this.map_select.disabled = true;
     this.players_select.disabled = true;
     this.start_button.disabled = true;
+    this.restart_button.disabled = false;
     this.game = new Game(
       this.board,
       this.mode,
@@ -78,6 +87,7 @@ class MainScene {
         this.map_select.disabled = false;
         this.players_select.disabled = false;
         this.start_button.disabled = false;
+        this.restart_button.disabled = true;
         this.canvas.drawMap();
       }
     );
@@ -97,6 +107,7 @@ const main = () => {
   const map_select = document.getElementById("map-select");
   const players_select = document.getElementById("players-select");
   const start_button = document.getElementById("start-button");
+  const restart_button = document.getElementById("restart-button");
 
   const KEYMAP = {
     player1: {
@@ -122,6 +133,7 @@ const main = () => {
     map_select,
     players_select,
     start_button,
+    restart_button,
     KEYMAP
   );
   main_scene.init();
