@@ -215,3 +215,23 @@ body {
   width: 40px;
   height: auto;
 }
+
+.skip-box-overlay-hidden {
+  display: none;
+}
+
+.skip-box-overlay {
+  box-sizing: border-box;
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(255, 255, 255, 0.8);
+  padding: 20px;
+  border: black;
+  border-width: 1px;
+  border-style: solid;
+  top: 0px;
+  width: 300px;
+  height: 100px;
+}

@@ -75,7 +75,14 @@
           <img id="player2-life3" src="assets/heart-player2-full.png" hidden />
         </div>
       </section>
-      <canvas id="map" tabindex="0"></canvas>
+      <div class="game-scene">
+        <canvas id="map" tabindex="0"></canvas>
+        <div class="skip-box-overlay-hidden" id="skip-box-overlay">
+          <span>Press</span>
+          <button class="key text-key" onclick="keyButton('d')">Ctrl</button>
+          <span>to skip intro</span>
+        </div>
+      </div>
       <section class="players">
         <div class="controls">
           1st Player
