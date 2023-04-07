@@ -238,3 +238,23 @@ body {
   width: 300px;
   height: 100px;
 }
+
+.key-animation {
+  animation: key-animation 0.8s ease-in-out infinite;
+  transition: all 0.5s ease-in-out;
+}
+
+@keyframes key-animation {
+  0% {
+    transform: translateY(0);
+    box-shadow: rgba(45, 35, 66, 0.4) 0 2px 4px, var(--box-shadow-button);
+  }
+  50% {
+    transform: translateY(-2px);
+    box-shadow: rgba(45, 35, 66, 0.4) 0 4px 8px, var(--box-shadow-button);
+  }
+  100% {
+    transform: translateY(0);
+    box-shadow: rgba(45, 35, 66, 0.4) 0 2px 4px, var(--box-shadow-button);
+  }
+}
