@@ -1,17 +1,19 @@
 class Game {
-  constructor(board, mode, sizeCell, canvas, keymaps) {
+  constructor(board, mode, sizeCell, canvas, timer, keymaps) {
     this.board = board;
     this.mode = mode;
     this.sizeCell = sizeCell;
     this.canvas = canvas;
+    this.timer = timer;
     this.keymaps = keymaps;
     this.players = [];
     this.enemies = [];
     this.entities = [];
     this.move_subscription = null;
     this.fps = 60;
-    this.audio_intro = new Audio("assets/intro.mp3");
-    this.audio_main = new Audio("assets/main.mp3");
+    this.pathAssets = "./assets";
+    this.audio_intro = new Audio(`${this.pathAssets}/intro.mp3`);
+    this.audio_main = new Audio(`${this.pathAssets}/main.mp3`);
     this.audio_main.loop = true;
     this._update_canvas_subject = new rxjs.Subject();
     this._end_game_subject = new rxjs.Subject();
@@ -189,6 +191,38 @@ class Game {
     this._update_canvas_subject.next(this.entities);
   }
 
+  changeTime = (time) => {
+    if (time > 0) {
+      this.timer.children[0].innerHTML = `Ready? ${time}`;
+    } else {
+      this.timer.children[0].innerHTML = "Go!";
+    }
+  };
+
+  startTimer() {
+    this.timer.style = "display: flex";
+    const seconds = 10;
+    const subjectTimer = rxjs
+      .interval(10)
+      .pipe(
+        rxjs.operators.map((x) => seconds * 100 - x),
+        rxjs.operators.take(seconds * 100 + 1),
+        rxjs.operators.map(
+          (x) =>
+            `${Math.floor(x / 100)}.${(x % 100).toString().padStart(2, "0")}`
+        )
+      )
+      .subscribe(this.changeTime);
+
+    setTimeout(() => {
+      subjectTimer.unsubscribe();
+      this.timer.style = "display: none";
+    }, seconds * 1000 + 1000);
+    addEventListener("unload", () => {
+      subjectTimer.unsubscribe();
+    });
+  }
+
   killEntity(entity) {
     this.unsubscribeEntity(entity);
     this.entities = this.entities.filter(
@@ -204,8 +238,9 @@ class Game {
 
   killPlayer(player) {
     player.takeDamage();
-    document.getElementById(player.id + "-life" + (player.lifes + 1)).src =
-      "assets/heart-" + player.id + "-empty.png";
+    document.getElementById(
+      `${player.id}-life${player.lifes + 1}`
+    ).src = `${this.pathAssets}/heart-${player.id}-empty.png`;
     if (player.lifes > 0) {
       let { x, y } = this.board.getRandomValidCell();
       player.position.x = x * player.size;
@@ -231,8 +266,8 @@ class Game {
     for (let player_number = 1; player_number < 2; player_number++) {
       for (let heart_number = 1; heart_number < 4; heart_number++) {
         document.getElementById(
-          "player" + player_number + "-life" + heart_number
-        ).src = "assets/heart-" + "player" + player_number + "-full.png";
+          `player${player_number}-life${heart_number}`
+        ).src = `${this.pathAssets}/heart-player${player_number}-full.png`;
       }
     }
   }

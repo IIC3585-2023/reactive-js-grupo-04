@@ -8,6 +8,7 @@ class MainScene {
     sizeCell,
     canvas_element,
     context_element,
+    timer,
     map_select,
     players_select,
     start_button,
@@ -17,6 +18,7 @@ class MainScene {
     this.sizeCell = sizeCell;
     this.canvas_element = canvas_element;
     this.context_element = context_element;
+    this.timer = timer;
     this.map_select = map_select;
     this.players_select = players_select;
     this.start_button = start_button;
@@ -70,6 +72,7 @@ class MainScene {
       this.mode,
       this.sizeCell,
       this.canvas,
+      this.timer,
       this.keymaps
     ); //game not initialiazed
     this.canvas.updateSubscription = this.game.subscribeToCanvasUpdate(
@@ -98,6 +101,7 @@ class MainScene {
 const main = () => {
   const CANVAS = document.getElementById("map");
   const CONTEXT = CANVAS.getContext("2d");
+  const TIMER = document.getElementById("timer");
   const map_select = document.getElementById("map-select");
   const players_select = document.getElementById("players-select");
   const start_button = document.getElementById("start-button");
@@ -123,6 +127,7 @@ const main = () => {
     sizeCell,
     CANVAS,
     CONTEXT,
+    TIMER,
     map_select,
     players_select,
     start_button,

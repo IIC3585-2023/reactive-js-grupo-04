@@ -48,10 +48,15 @@ body {
   color: var(--text-color);
 }
 
+.canvas-container {
+  position: relative;
+}
+
 #map {
   border: 3px solid var(--bg-color-3);
   width: 100%;
   max-height: 600px;
+  position: relative;
 }
 
 @media (max-width: 768px) {
@@ -65,11 +70,12 @@ body {
   flex-direction: row;
   align-items: center;
   justify-content: center;
-  margin: 1em;
 }
 
-.container-select .start-game {
-  margin: 0 1em;
+@media (max-width: 768px) {
+  .container-select {
+    flex-direction: column;
+  }
 }
 
 .start-game {
@@ -80,6 +86,7 @@ body {
   border: 2px solid black;
   box-shadow: rgba(45, 35, 66, 0.4) 0 2px 4px, var(--box-shadow-button);
   cursor: pointer;
+  margin: 1em;
 }
 
 .start-game:hover {
