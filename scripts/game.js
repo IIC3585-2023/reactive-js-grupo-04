@@ -13,6 +13,7 @@ class Game {
     this.pathAssets = "./assets";
     this.audio_intro = new Audio(`${this.pathAssets}/intro.mp3`);
     this.audio_main = new Audio(`${this.pathAssets}/main.mp3`);
+    this.audio_powerup = new Audio(`${this.pathAssets}/powerup.mp3`);
     this.audio_main.loop = true;
     this._update_canvas_subject = new rxjs.Subject();
     this._end_game_subject = new rxjs.Subject();
@@ -170,7 +171,9 @@ class Game {
       x * sizeCharacter,
       y * sizeCharacter,
       sizeCharacter,
-      this.keymaps.player1
+      this.keymaps.player1,
+      this.audio_main,
+      this.audio_powerup
     );
     this.players.push(player1);
     this.entities.push(...this.players);

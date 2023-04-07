@@ -30,6 +30,7 @@ class Entity {
     this.size;
 
   checkWallCollision(direction, board) {
+    if (!direction) return false;
     const y = this.getposBoard("y", direction);
     const x = this.getposBoard("x", direction);
     const yPos = parseInt(y);
@@ -92,40 +93,67 @@ class Entity {
 }
 
 class Player extends Entity {
-  constructor(id, x, y, size, keymap) {
+  constructor(id, x, y, size, keymap, audio_main, audio_powerup) {
     super(id, x, y, size);
     this.keymap = keymap;
     this.ability_animation_speed = 200;
     this.ability_duration = 6000;
     this.lifes = 3;
     this.img_count = 1;
+    this.audio_main = audio_main;
+    this.audio_powerup = audio_powerup;
+    this.intervalId = null;
+    this.timeoutId = null;
   }
 
   callbackMoveSignal(board) {
     if (!this.checkWallCollision(this.directionKeyboard, board)) {
-      this.directionMovement = this.directionKeyboard;
+      if (this.directionKeyboard)
+        this.directionMovement = this.directionKeyboard;
     }
     super.callbackMoveSignal(board);
   }
 
   activatePower() {
+    // If the ability is already active, clear the existing interval and start a new one
+    if (this.has_ability) {
+      clearInterval(this.intervalId);
+      clearTimeout(this.timeoutId);
+      this.img_count = 1;
+    }
     this.has_ability = true;
-    this.img = document.getElementById(this.id + "-" + this.img_count);
+    this.img = document.getElementById(`${this.id}-${this.img_count}`);
+    this.startPowerUpAudio();
     // Start the interval
-    const intervalId = setInterval(() => {
+    this.intervalId = setInterval(() => {
       if (this.img_count == 5) {
         this.img_count = 0;
       }
       this.img_count++;
-      this.img = document.getElementById(this.id + "-" + this.img_count);
+      this.img = document.getElementById(`${this.id}-${this.img_count}`);
     }, this.ability_animation_speed);
 
     // Stop the interval after 5 seconds
-    setTimeout(() => {
-      clearInterval(intervalId); // Stop the interval
+    this.timeoutId = setTimeout(() => {
+      clearInterval(this.intervalId); // Stop the interval
       this.has_ability = false;
       this.img = document.getElementById(this.id);
+      this.stopPowerUpAudio();
     }, this.ability_duration);
+  }
+
+  startPowerUpAudio() {
+    if (this.audio_powerup.paused && this.has_ability) {
+      this.audio_powerup.play();
+      this.audio_main.pause();
+    }
+  }
+
+  stopPowerUpAudio() {
+    if (!this.audio_powerup.paused && !this.has_ability) {
+      this.audio_powerup.pause();
+      this.audio_main.play();
+    }
   }
 
   takeDamage() {
