@@ -78,8 +78,7 @@ class Game {
 
   showSkipIntroWindow() {
     let skip_window = document.getElementById("skip-box-overlay");
-    skip_window.classList.remove("skip-box-overlay-hidden");
-    skip_window.classList.add("skip-box-overlay");
+    skip_window.style = "display: flex";
     let canvas_rect = this.canvas.canvas.getBoundingClientRect();
     skip_window.style.top = `${
       canvas_rect.y +
@@ -94,7 +93,6 @@ class Game {
       canvas_rect.width / 2 -
       skip_window.offsetWidth / 2
     }px`;
-    console.log(canvas_rect);
   }
 
   startGameIntro() {
@@ -116,7 +114,6 @@ class Game {
       .pipe(rxjs.filter((event) => event.key === "Control"));
 
     const stop_listening_subject = new rxjs.Subject();
-
     const audio_end_observable = rxjs
       .fromEvent(this.audio_intro, "ended")
       .pipe(rxjs.takeUntil(stop_listening_subject));
@@ -144,8 +141,7 @@ class Game {
 
   startGameAfterIntro(player1, enemy1) {
     let skip_window = document.getElementById("skip-box-overlay");
-    skip_window.classList.remove("skip-box-overlay");
-    skip_window.classList.add("skip-box-overlay-hidden");
+    skip_window.style = "display: none";
     this.audio_main.play();
     this.players.forEach((player) => {
       player.clock_subscription = this._clock_observable.subscribe(() =>

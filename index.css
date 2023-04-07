@@ -216,14 +216,10 @@ body {
   height: auto;
 }
 
-.skip-box-overlay-hidden {
-  display: none;
-}
-
 .skip-box-overlay {
   box-sizing: border-box;
   position: absolute;
-  display: flex;
+  display: none;
   justify-content: center;
   align-items: center;
   background-color: rgba(255, 255, 255, 0.8);
