@@ -1,10 +1,9 @@
 class Game {
-  constructor(board, mode, sizeCell, canvas, timer, keymaps) {
+  constructor(board, mode, sizeCell, canvas, keymaps) {
     this.board = board;
     this.mode = mode;
     this.sizeCell = sizeCell;
     this.canvas = canvas;
-    this.timer = timer;
     this.keymaps = keymaps;
     this.players = [];
     this.enemies = [];
@@ -21,8 +20,10 @@ class Game {
     this._keyboard_observable = new rxjs.fromEvent(document, "keydown").pipe(
       rxjs.operators.map((event) => {
         if (event instanceof KeyboardEvent) {
-          const direction = this.keymaps.player1[event.key];
-          return direction;
+          if (event.key in this.keymaps.player1) {
+            const direction = this.keymaps.player1[event.key];
+            return direction;
+          }
         }
       })
     );
@@ -31,7 +32,7 @@ class Game {
     window.addEventListener("beforeunload", (event) => {
       this.unsubscribeAll();
     });
-    this.addPlayersAndEnemies();
+    this.startGameIntro();
   }
 
   subscribeToCanvasUpdate(callback) {
@@ -76,9 +77,91 @@ class Game {
       });
   }
 
-  addPlayersAndEnemies() {
+  showSkipIntroWindow() {
+    let skip_window = document.getElementById("skip-box-overlay");
+    skip_window.style = "display: flex";
+    let canvas_rect = this.canvas.canvas.getBoundingClientRect();
+    skip_window.style.top = `${
+      canvas_rect.y +
+      window.scrollY +
+      canvas_rect.height / 2 -
+      skip_window.offsetHeight / 2
+    }px`;
+
+    skip_window.style.left = `${
+      canvas_rect.x +
+      window.scrollX +
+      canvas_rect.width / 2 -
+      skip_window.offsetWidth / 2
+    }px`;
+  }
+
+  startGameIntro() {
+    this.addPlayersAndEnemies();
+    this.showSkipIntroWindow();
+    this.playAudioIntro();
+  }
+
+  skipIntro(event) {
+    this.stopAudioIntro();
+    this.startGameAfterIntro();
+  }
+
+  playAudioIntro() {
     this.audio_intro.play();
-    this.startTimer();
+
+    const control_key = rxjs
+      .fromEvent(document, "keydown")
+      .pipe(rxjs.filter((event) => event.key === "Control"));
+
+    const stop_listening_subject = new rxjs.Subject();
+    const audio_end_observable = rxjs
+      .fromEvent(this.audio_intro, "ended")
+      .pipe(rxjs.takeUntil(stop_listening_subject));
+    const control_pressed_observable = control_key.pipe(
+      rxjs.takeUntil(stop_listening_subject)
+    );
+
+    rxjs
+      .merge(audio_end_observable, control_pressed_observable)
+      .pipe(rxjs.take(1))
+      .subscribe((event) => {
+        if (event.type === "ended") {
+          this.startGameAfterIntro();
+        } else if (event.type === "keydown") {
+          this.skipIntro();
+        }
+        stop_listening_subject.next();
+      });
+  }
+
+  stopAudioIntro() {
+    this.audio_intro.pause();
+    this.audio_intro.currentTime = 0;
+  }
+
+  startGameAfterIntro(player1, enemy1) {
+    let skip_window = document.getElementById("skip-box-overlay");
+    skip_window.style = "display: none";
+    this.audio_main.play();
+    this.players.forEach((player) => {
+      player.clock_subscription = this._clock_observable.subscribe(() =>
+        player.callbackMoveSignal(this.board)
+      );
+      player.keyboard_subscription = this._keyboard_observable.subscribe(
+        (direction) => player.callbackKeyboardEventSignal(direction)
+      );
+    });
+    this.enemies.forEach(
+      (enemy) =>
+        (enemy.clock_subscription = this._clock_observable.subscribe(() =>
+          enemy.callbackMoveSignal(this.board, this.players)
+        ))
+    );
+    this.refreshSubscription();
+  }
+
+  addPlayersAndEnemies() {
     const sizeCharacter = this.sizeCell;
     // player 1
     let { x, y } = this.board.getRandomValidCell();
@@ -105,53 +188,6 @@ class Game {
     this.enemies.push(enemy1);
     this.entities.push(...this.enemies);
     this._update_canvas_subject.next(this.entities);
-
-    this.audio_intro.addEventListener("ended", () => {
-      this.audio_main.play();
-      player1.clock_subscription = this._clock_observable.subscribe(() =>
-        player1.callbackMoveSignal(this.board)
-      );
-      player1.keyboard_subscription = this._keyboard_observable.subscribe(
-        (direction) => player1.callbackKeyboardEventSignal(direction)
-      );
-      enemy1.clock_subscription = this._clock_observable.subscribe(() =>
-        enemy1.callbackMoveSignal(this.board, this.players)
-      );
-      this.refreshSubscription();
-    });
-  }
-
-  changeTime = (time) => {
-    if (time > 0) {
-      this.timer.children[0].innerHTML = `Ready? ${time}`;
-    }
-    else {
-      this.timer.children[0].innerHTML = "Go!"
-    }
-  };
-
-  startTimer() {
-    this.timer.style = "display: flex";
-    const seconds = 10;
-    const subjectTimer = rxjs
-      .interval(10)
-      .pipe(
-        rxjs.operators.map((x) => seconds * 100 - x),
-        rxjs.operators.take(seconds * 100 + 1),
-        rxjs.operators.map(
-          (x) =>
-            `${Math.floor(x / 100)}.${(x % 100).toString().padStart(2, "0")}`
-        )
-      )
-      .subscribe(this.changeTime);
-
-    setTimeout(() => {
-      subjectTimer.unsubscribe();
-      this.timer.style = "display: none";
-    }, seconds * 1000 + 1000);
-    addEventListener("unload", () => {
-      subjectTimer.unsubscribe();
-    });
   }
 
   killEntity(entity) {

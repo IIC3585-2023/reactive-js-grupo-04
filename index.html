@@ -78,12 +78,14 @@
           <img id="player2-life3" src="assets/heart-player2-full.png" hidden />
         </div>
       </section>
-      <section class="canvas-container">
+      <div class="game-scene">
         <canvas id="map" tabindex="0"></canvas>
-        <div id="timer">
-          <span id="timer-value">10</span>
+        <div class="skip-box-overlay" id="skip-box-overlay">
+          <span>Press</span>
+          <button class="key text-key" onclick="keyButton('d')">Ctrl</button>
+          <span>to skip intro</span>
         </div>
-      </section>
+      </div>
       <section class="players">
         <div class="controls">
           1st Player
