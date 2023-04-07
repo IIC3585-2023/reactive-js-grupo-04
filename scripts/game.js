@@ -225,6 +225,7 @@ class Game {
 
   stopGame() {
     this.audio_main.pause();
+    this.audio_powerup.pause();
     this.restartHeartSprites();
     this.unsubscribeAll();
     this.board.restart();
