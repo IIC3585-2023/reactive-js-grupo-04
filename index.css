@@ -257,10 +257,12 @@ body {
 .container-player-lifes {
   display: flex;
   flex-direction: row;
+  margin-top: 0.5em;
 }
 
 .container-player-lifes img {
   width: 40px;
+  margin: 0 0.3em;
   height: auto;
 }
 
