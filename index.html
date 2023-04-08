@@ -30,15 +30,26 @@
         if (arrowKeys.includes(e.code)) e.preventDefault();
       }
       window.addEventListener("keydown", handleKeyDown);
+
+      // change audio display
+      function toggleMute() {
+        const audios = document.getElementsByTagName("audio");
+        for (let audio of audios) {
+          audio.muted = !audio.muted;
+        }
+        const muteIcon = document.getElementById("mute-icon");
+        muteIcon.classList.toggle("fa-volume-up");
+        muteIcon.classList.toggle("fa-volume-off");
+      }
     </script>
   </head>
   <body>
     <main>
       <section class="container-logos">
         <img src="assets/hxh.png" alt="hxh" class="logo" />
-        <!-- <button class="mute-button">
+        <button id="mute-button" onclick="toggleMute()">
           <i class="fa fa-volume-up" id="mute-icon"></i>
-        </button> -->
+        </button>
       </section>
       <h2>Hunter's Exam: Final Stage</h2>
       <section class="container-select">
