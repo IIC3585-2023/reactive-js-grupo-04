@@ -267,7 +267,7 @@ body {
   filter: drop-shadow(2px 2px 2px rgba(0, 0, 0, 0.5));
 }
 
-.skip-box-overlay {
+.overlay {
   box-sizing: border-box;
   position: absolute;
   display: none;
@@ -275,12 +275,45 @@ body {
   align-items: center;
   background-color: rgba(255, 255, 255, 0.8);
   padding: 20px;
-  border: black;
-  border-width: 1px;
-  border-style: solid;
+  border: 2px solid black;
   top: 0px;
   width: 300px;
+  border-radius: 0.5em;
+}
+
+.skip-box-overlay {
   height: 100px;
+}
+
+.game-over-overlay {
+  flex-direction: column;
+}
+
+@media (min-width: 768px) {
+  .game-over-overlay {
+    padding: 50px 20px;
+  }
+}
+
+.title-game-over {
+  font-size: 1.5em;
+  font-weight: bold;
+  text-align: center;
+}
+
+.info-game-over {
+  font-size: 1em;
+  margin: 1em;
+}
+
+#hunter-license {
+  width: 100px;
+  filter: drop-shadow(2px 2px 2px rgba(0, 0, 0, 0.5));
+}
+
+#gon-crying {
+  width: 200px;
+  filter: brightness(1.5);
 }
 
 .key-animation {
