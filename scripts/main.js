@@ -25,6 +25,7 @@ class MainScene {
     this.game = null;
     this.game_ended_signal_subcription = null;
   }
+
   init() {
     this.map_select.addEventListener("change", (e) => {
       this.board = new Board(this.boards[e.target.value].board);
@@ -50,6 +51,7 @@ class MainScene {
       this.unsubscribeAll();
     });
   }
+
   newCanvas() {
     this.canvas = new Canvas(
       this.board,
@@ -60,16 +62,17 @@ class MainScene {
 
     this.canvas.drawMap();
   }
-  restartGame(){
-    if (this.game != null){
-      this.game.restartGame();
-    }
+
+  restartGame() {
+    if (this.game != null) this.game.restartGame();
   }
+
   startGame() {
     this.map_select.disabled = true;
     this.players_select.disabled = true;
     this.start_button.disabled = true;
     this.restart_button.disabled = false;
+    if (this.game != null) this.game.stopAudio(this.game.audio_gameover);
     this.game = new Game(
       this.board,
       this.mode,
@@ -95,6 +98,7 @@ class MainScene {
     document.getElementById("container-game-info").scrollIntoView();
     this.canvas_element.focus();
   }
+
   unsubscribeAll() {
     this.canvas.unsubscribeAll();
     if (this.game) this.game.unsubscribeAll();

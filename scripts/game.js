@@ -15,8 +15,10 @@ class Game {
     this.audio_intro = new Audio(`${this.pathAssets}/audios/intro.mp3`);
     this.audio_main = new Audio(`${this.pathAssets}/audios/main.mp3`);
     this.audio_powerup = new Audio(`${this.pathAssets}/audios/powerup.mp3`);
+    this.audio_gameover = new Audio(`${this.pathAssets}/audios/gameover.mp3`);
     this.audio_main.loop = true;
     this.audio_powerup.loop = true;
+    this.audio_gameover.loop = true;
     this._update_canvas_subject = new rxjs.Subject();
     this._end_game_subject = new rxjs.Subject();
     this._powerup_observable = new rxjs.Subject();
@@ -139,13 +141,14 @@ class Game {
   }
 
   startGameIntro() {
+    this.stopAudio(this.audio_gameover);
     this.addPlayersAndEnemies();
     this.showSkipIntroWindow();
     this.playAudioIntro();
   }
 
-  skipIntro(event) {
-    this.stopAudioIntro();
+  skipIntro() {
+    this.stopAudio(this.audio_intro);
     this.startGameAfterIntro();
   }
 
@@ -177,9 +180,9 @@ class Game {
       });
   }
 
-  stopAudioIntro() {
-    this.audio_intro.pause();
-    this.audio_intro.currentTime = 0;
+  stopAudio(audio) {
+    if (!audio.paused) audio.pause();
+    audio.currentTime = 0;
   }
 
   startGameAfterIntro() {
@@ -264,6 +267,7 @@ class Game {
   }
 
   stopGame() {
+    this.audio_gameover.play();
     this.audio_main.pause();
     this.audio_powerup.pause();
     this.restartHeartSprites();
