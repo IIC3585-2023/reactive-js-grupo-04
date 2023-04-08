@@ -99,7 +99,7 @@
       </section>
       <div class="game-scene">
         <canvas id="map" tabindex="0"></canvas>
-        <div class="skip-box-overlay" id="skip-box-overlay">
+        <div class="overlay skip-box-overlay" id="skip-box-overlay">
           <span>Press</span>
           <button
             class="key text-key key-animation"
@@ -109,6 +109,7 @@
           </button>
           <span>to skip intro</span>
         </div>
+        <div class="overlay game-over-overlay" id="game-over-overlay"></div>
       </div>
       <section class="players">
         <div class="controls">
@@ -193,6 +194,25 @@
       style="display: none"
     />
     <img id="tree" src="assets/tree.png" hidden style="display: none" />
+
+    <div id="win-overlay" hidden style="display: none">
+      <span class="title-game-over">Congratulations! You won!</span>
+      <span class="info-game-over">
+        You have passed the exam, take your Hunter License
+      </span>
+      <img
+        src="assets/hunter_license.png"
+        alt="hunter-license"
+        id="hunter-license"
+      />
+    </div>
+    <div id="lose-overlay" hidden style="display: none">
+      <span class="title-game-over">Game Over. You lost</span>
+      <span class="info-game-over">
+        Press <b>Start Game</b> above to try again
+      </span>
+      <img src="assets/gon_crying.png" alt="gon-crying" id="gon-crying" />
+    </div>
   </body>
   <!-- scripts -->
   <script src="scripts/boards.js"></script>

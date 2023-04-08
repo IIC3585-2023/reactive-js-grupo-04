@@ -114,21 +114,27 @@ class Game {
   }
 
   showSkipIntroWindow() {
-    let skip_window = document.getElementById("skip-box-overlay");
+    const game_over_window = document.getElementById("game-over-overlay");
+    game_over_window.style = "display: none";
+    const skip_window = document.getElementById("skip-box-overlay");
     skip_window.style = "display: flex";
+    this.centerElementInCanvas(skip_window);
+  }
+
+  centerElementInCanvas(element) {
     let canvas_rect = this.canvas.canvas.getBoundingClientRect();
-    skip_window.style.top = `${
+    element.style.top = `${
       canvas_rect.y +
       window.scrollY +
       canvas_rect.height / 2 -
-      skip_window.offsetHeight / 2
+      element.offsetHeight / 2
     }px`;
 
-    skip_window.style.left = `${
+    element.style.left = `${
       canvas_rect.x +
       window.scrollX +
       canvas_rect.width / 2 -
-      skip_window.offsetWidth / 2
+      element.offsetWidth / 2
     }px`;
   }
 
@@ -177,7 +183,7 @@ class Game {
   }
 
   startGameAfterIntro() {
-    let skip_window = document.getElementById("skip-box-overlay");
+    const skip_window = document.getElementById("skip-box-overlay");
     skip_window.style = "display: none";
     this.audio_main.play();
     this.players.forEach((player) => {
@@ -263,8 +269,22 @@ class Game {
     this.restartHeartSprites();
     this.unsubscribeAll();
     this.board.restart();
-    let result = this.players.length > 0 ? "p-win" : "e-win";
+    const result = this.players.length > 0 ? "p-win" : "e-win";
     this._end_game_subject.next(result);
+    this.showGameOverWindow(result);
+  }
+
+  showGameOverWindow(result) {
+    const game_over_window = document.getElementById("game-over-overlay");
+    if (result === "e-win") {
+      game_over_window.innerHTML =
+        document.getElementById("lose-overlay").innerHTML;
+    } else if (result === "p-win") {
+      game_over_window.innerHTML =
+        document.getElementById("win-overlay").innerHTML;
+    }
+    game_over_window.style = "display: flex";
+    this.centerElementInCanvas(game_over_window);
   }
 
   restartGame() {
