@@ -105,10 +105,12 @@ body {
 }
 
 .container-logos {
+  position: relative;
   display: flex;
   flex-direction: row;
   align-items: center;
   justify-content: space-around;
+  width: 100%;
 }
 
 .logo {
@@ -276,7 +278,6 @@ body {
   background-color: rgba(255, 255, 255, 0.8);
   padding: 20px;
   border: 2px solid black;
-  top: 0px;
   width: 300px;
   border-radius: 0.5em;
 }
@@ -355,4 +356,19 @@ footer {
     transform: translateY(0);
     box-shadow: rgba(45, 35, 66, 0.4) 0 2px 4px, var(--box-shadow-button);
   }
+}
+
+.game-scene {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: auto;
+}
+
+.mute-button{
+  position: absolute;
+  right: 0;
+  top: 0;
 }

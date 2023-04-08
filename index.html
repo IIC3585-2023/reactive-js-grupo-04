@@ -25,25 +25,20 @@
       };
 
       // remove scrolling by arrow keys
-      window.addEventListener(
-        "keydown",
-        function (e) {
-          if (
-            ["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"].indexOf(
-              e.code
-            ) > -1
-          ) {
-            e.preventDefault();
-          }
-        },
-        false
-      );
+      const arrowKeys = ["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"];
+      function handleKeyDown(e) {
+        if (arrowKeys.includes(e.code)) e.preventDefault();
+      }
+      window.addEventListener("keydown", handleKeyDown);
     </script>
   </head>
   <body>
     <main>
       <section class="container-logos">
         <img src="assets/hxh.png" alt="hxh" class="logo" />
+        <!-- <button class="mute-button">
+          <i class="fa fa-volume-up" id="mute-icon"></i>
+        </button> -->
       </section>
       <h2>Hunter's Exam: Final Stage</h2>
       <section class="container-select">
@@ -140,84 +135,90 @@
         </div>
       </section>
     </main>
-    <img
-      id="player1"
-      src="assets/player1/player1.png"
-      hidden
-      style="display: none"
-    />
-    <img
-      id="player1-1"
-      src="assets/player1/player1-1.png"
-      hidden
-      style="display: none"
-    />
-    <img
-      id="player1-2"
-      src="assets/player1/player1-2.png"
-      hidden
-      style="display: none"
-    />
-    <img
-      id="player1-3"
-      src="assets/player1/player1-3.png"
-      hidden
-      style="display: none"
-    />
-    <img
-      id="player1-4"
-      src="assets/player1/player1-4.png"
-      hidden
-      style="display: none"
-    />
-    <img
-      id="player1-5"
-      src="assets/player1/player1-5.png"
-      hidden
-      style="display: none"
-    />
-
-    <img id="player2" src="assets/killua.png" hidden style="display: none" />
-    <img id="enemy1" src="assets/hisoka.png" hidden style="display: none" />
-    <img id="enemy2" src="assets/illumi.png" hidden style="display: none" />
-
-    <img
-      id="reward1"
-      src="assets/rewards/reward1.png"
-      hidden
-      style="display: none"
-    />
-    <img
-      id="reward2"
-      src="assets/rewards/reward2.png"
-      hidden
-      style="display: none"
-    />
-    <img id="tree" src="assets/tree.png" hidden style="display: none" />
-
-    <div id="win-overlay" hidden style="display: none">
-      <span class="title-game-over">Congratulations! You won!</span>
-      <span class="info-game-over">
-        You have passed the exam, take your Hunter License
-      </span>
+    <div class="sprites">
       <img
-        src="assets/hunter_license.png"
-        alt="hunter-license"
-        id="hunter-license"
+        id="player1"
+        src="assets/player1/player1.png"
+        hidden
+        style="display: none"
       />
+      <img
+        id="player1-1"
+        src="assets/player1/player1-1.png"
+        hidden
+        style="display: none"
+      />
+      <img
+        id="player1-2"
+        src="assets/player1/player1-2.png"
+        hidden
+        style="display: none"
+      />
+      <img
+        id="player1-3"
+        src="assets/player1/player1-3.png"
+        hidden
+        style="display: none"
+      />
+      <img
+        id="player1-4"
+        src="assets/player1/player1-4.png"
+        hidden
+        style="display: none"
+      />
+      <img
+        id="player1-5"
+        src="assets/player1/player1-5.png"
+        hidden
+        style="display: none"
+      />
+
+      <img id="player2" src="assets/killua.png" hidden style="display: none" />
+      <img id="enemy1" src="assets/hisoka.png" hidden style="display: none" />
+      <img id="enemy2" src="assets/illumi.png" hidden style="display: none" />
+
+      <img
+        id="reward1"
+        src="assets/rewards/reward1.png"
+        hidden
+        style="display: none"
+      />
+      <img
+        id="reward2"
+        src="assets/rewards/reward2.png"
+        hidden
+        style="display: none"
+      />
+      <img id="tree" src="assets/tree.png" hidden style="display: none" />
+
+      <div id="win-overlay" hidden style="display: none">
+        <span class="title-game-over">Congratulations! You won!</span>
+        <span class="info-game-over">
+          You have passed the exam, take your Hunter License
+        </span>
+        <img
+          src="assets/hunter_license.png"
+          alt="hunter-license"
+          id="hunter-license"
+        />
+      </div>
+      <div id="lose-overlay" hidden style="display: none">
+        <span class="title-game-over">Game Over. You lost</span>
+        <span class="info-game-over">
+          Press <b>Start Game</b> above to try again
+        </span>
+        <img src="assets/gon_crying.png" alt="gon-crying" id="gon-crying" />
+      </div>
+      <audio id="audio-intro" src="assets/audios/intro.mp3"></audio>
+      <audio id="audio-main" src="assets/audios/main.mp3" loop></audio>
+      <audio id="audio-powerup" src="assets/audios/powerup.mp3" loop></audio>
+      <audio id="audio-gameover" src="assets/audios/gameover.mp3" loop></audio>
     </div>
-    <div id="lose-overlay" hidden style="display: none">
-      <span class="title-game-over">Game Over. You lost</span>
-      <span class="info-game-over">
-        Press <b>Start Game</b> above to try again
-      </span>
-      <img src="assets/gon_crying.png" alt="gon-crying" id="gon-crying" />
-    </div>
+
     <footer>
       Made with ❤️ by
       <a
         class="github"
-        style="width: auto"
         href="https://github.com/IIC3585-2023/reactive-js-grupo-04"
         target="_blank"
       >

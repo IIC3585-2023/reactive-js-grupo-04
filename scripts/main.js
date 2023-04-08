@@ -72,7 +72,6 @@ class MainScene {
     this.players_select.disabled = true;
     this.start_button.disabled = true;
     this.restart_button.disabled = false;
-    if (this.game != null) this.game.stopAudio(this.game.audio_gameover);
     this.game = new Game(
       this.board,
       this.mode,
