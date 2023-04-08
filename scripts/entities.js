@@ -93,15 +93,14 @@ class Entity {
 }
 
 class Player extends Entity {
-  constructor(id, x, y, size, keymap, audio_main, audio_powerup) {
+  constructor(id, x, y, size, keymap, _powerup_observable) {
     super(id, x, y, size);
     this.keymap = keymap;
     this.ability_animation_speed = 200;
     this.ability_duration = 6000;
     this.lifes = 3;
     this.img_count = 1;
-    this.audio_main = audio_main;
-    this.audio_powerup = audio_powerup;
+    this._powerup_observable = _powerup_observable;
     this.intervalId = null;
     this.timeoutId = null;
   }
@@ -122,8 +121,8 @@ class Player extends Entity {
       this.img_count = 1;
     }
     this.has_ability = true;
+    this._powerup_observable.next(true);
     this.img = document.getElementById(`${this.id}-${this.img_count}`);
-    this.startPowerUpAudio();
     // Start the interval
     this.intervalId = setInterval(() => {
       if (this.img_count == 5) {
@@ -137,23 +136,9 @@ class Player extends Entity {
     this.timeoutId = setTimeout(() => {
       clearInterval(this.intervalId); // Stop the interval
       this.has_ability = false;
+      this._powerup_observable.next(false);
       this.img = document.getElementById(this.id);
-      this.stopPowerUpAudio();
     }, this.ability_duration);
-  }
-
-  startPowerUpAudio() {
-    if (this.audio_powerup.paused && this.has_ability) {
-      this.audio_powerup.play();
-      this.audio_main.pause();
-    }
-  }
-
-  stopPowerUpAudio() {
-    if (!this.audio_powerup.paused && !this.has_ability) {
-      this.audio_powerup.pause();
-      this.audio_main.play();
-    }
   }
 
   takeDamage() {

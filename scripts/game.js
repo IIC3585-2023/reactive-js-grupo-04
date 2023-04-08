@@ -9,14 +9,18 @@ class Game {
     this.enemies = [];
     this.entities = [];
     this.move_subscription = null;
+    this.powerup_subscription = null;
     this.fps = 60;
     this.pathAssets = "./assets";
     this.audio_intro = new Audio(`${this.pathAssets}/audios/intro.mp3`);
     this.audio_main = new Audio(`${this.pathAssets}/audios/main.mp3`);
     this.audio_powerup = new Audio(`${this.pathAssets}/audios/powerup.mp3`);
     this.audio_main.loop = true;
+    this.audio_powerup.loop = true;
     this._update_canvas_subject = new rxjs.Subject();
     this._end_game_subject = new rxjs.Subject();
+    this._powerup_observable = new rxjs.Subject();
+    this.suscribeToPowerUpAudio();
     this._clock_observable = new rxjs.interval(1000 / this.fps);
     this._keyboard_observable = new rxjs.fromEvent(document, "keydown").pipe(
       rxjs.operators.map((event) => {
@@ -29,6 +33,7 @@ class Game {
       })
     );
   }
+
   init() {
     window.addEventListener("beforeunload", (event) => {
       this.unsubscribeAll();
@@ -70,7 +75,42 @@ class Game {
     }
   }
 
+  suscribeToPowerUpAudio() {
+    this.powerup_subscription = this._powerup_observable.subscribe(
+      (has_changed) => {
+        let keep_playing = false;
+        this.players.forEach((player) => {
+          if (player.has_ability) keep_playing = true;
+        });
+        if (keep_playing) {
+          this.startPowerUpAudio();
+        } else {
+          this.stopPowerUpAudio();
+        }
+      }
+    );
+  }
+
+  unsubscribePowerUp() {
+    this.powerup_subscription.unsubscribe();
+  }
+
+  startPowerUpAudio() {
+    if (this.audio_powerup.paused) {
+      this.audio_powerup.play();
+      this.audio_main.pause();
+    }
+  }
+
+  stopPowerUpAudio() {
+    if (!this.audio_powerup.paused) {
+      this.audio_powerup.pause();
+      this.audio_main.play();
+    }
+  }
+
   refreshSubscription() {
+    this.suscribeToPowerUpAudio();
     this.move_subscription = rxjs
       .merge(...this.entities.map((entity) => entity.position_subject))
       .subscribe((entity) => {
@@ -141,7 +181,7 @@ class Game {
     this.audio_intro.currentTime = 0;
   }
 
-  startGameAfterIntro(player1, enemy1) {
+  startGameAfterIntro() {
     let skip_window = document.getElementById("skip-box-overlay");
     skip_window.style = "display: none";
     this.audio_main.play();
@@ -172,8 +212,7 @@ class Game {
       y * sizeCharacter,
       sizeCharacter,
       this.keymaps.player1,
-      this.audio_main,
-      this.audio_powerup
+      this._powerup_observable
     );
     this.players.push(player1);
     this.entities.push(...this.players);
@@ -264,6 +303,7 @@ class Game {
       entity.unsubscribeEntity();
       i += 1;
     });
+    if (this.powerup_subscription) this.powerup_subscription.unsubscribe();
     if (this.move_subscription) this.move_subscription.unsubscribe();
     console.log(`All entities unsubscribed: ${i}/${this.entities.length}`);
   }
