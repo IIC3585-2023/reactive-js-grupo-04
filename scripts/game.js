@@ -11,9 +11,9 @@ class Game {
     this.move_subscription = null;
     this.fps = 60;
     this.pathAssets = "./assets";
-    this.audio_intro = new Audio(`${this.pathAssets}/intro.mp3`);
-    this.audio_main = new Audio(`${this.pathAssets}/main.mp3`);
-    this.audio_powerup = new Audio(`${this.pathAssets}/powerup.mp3`);
+    this.audio_intro = new Audio(`${this.pathAssets}/audios/intro.mp3`);
+    this.audio_main = new Audio(`${this.pathAssets}/audios/main.mp3`);
+    this.audio_powerup = new Audio(`${this.pathAssets}/audios/powerup.mp3`);
     this.audio_main.loop = true;
     this._update_canvas_subject = new rxjs.Subject();
     this._end_game_subject = new rxjs.Subject();
@@ -210,7 +210,7 @@ class Game {
     player.takeDamage();
     document.getElementById(
       `${player.id}-life${player.lifes + 1}`
-    ).src = `${this.pathAssets}/heart-${player.id}-empty.png`;
+    ).src = `${this.pathAssets}/hearts/heart-${player.id}-empty.png`;
     if (player.lifes > 0) {
       let { x, y } = this.board.getRandomValidCell();
       player.position.x = x * player.size;
@@ -247,7 +247,7 @@ class Game {
       for (let heart_number = 1; heart_number < 4; heart_number++) {
         document.getElementById(
           `player${player_number}-life${heart_number}`
-        ).src = `${this.pathAssets}/heart-player${player_number}-full.png`;
+        ).src = `${this.pathAssets}/hearts/heart-player${player_number}-full.png`;
       }
     }
   }
