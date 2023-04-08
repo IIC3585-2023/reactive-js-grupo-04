@@ -163,6 +163,8 @@ class Player extends Entity {
 
   unsubscribeEntity() {
     super.unsubscribeEntity();
+    clearInterval(this.intervalId);
+    clearTimeout(this.timeoutId);
     this.keyboard_subscription.unsubscribe();
   }
 }
