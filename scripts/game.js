@@ -12,13 +12,11 @@ class Game {
     this.powerup_subscription = null;
     this.fps = 60;
     this.pathAssets = "./assets";
-    this.audio_intro = new Audio(`${this.pathAssets}/audios/intro.mp3`);
-    this.audio_main = new Audio(`${this.pathAssets}/audios/main.mp3`);
-    this.audio_powerup = new Audio(`${this.pathAssets}/audios/powerup.mp3`);
-    this.audio_gameover = new Audio(`${this.pathAssets}/audios/gameover.mp3`);
-    this.audio_main.loop = true;
-    this.audio_powerup.loop = true;
-    this.audio_gameover.loop = true;
+    this.audio_intro = document.getElementById("audio-intro");
+    this.audio_main = document.getElementById("audio-main");
+    this.audio_powerup = document.getElementById("audio-powerup");
+    this.audio_gameover = document.getElementById("audio-gameover");
+    this.audio_main.currentTime = 0;
     this._update_canvas_subject = new rxjs.Subject();
     this._end_game_subject = new rxjs.Subject();
     this._powerup_observable = new rxjs.Subject();
@@ -120,24 +118,6 @@ class Game {
     game_over_window.style = "display: none";
     const skip_window = document.getElementById("skip-box-overlay");
     skip_window.style = "display: flex";
-    this.centerElementInCanvas(skip_window);
-  }
-
-  centerElementInCanvas(element) {
-    let canvas_rect = this.canvas.canvas.getBoundingClientRect();
-    element.style.top = `${
-      canvas_rect.y +
-      window.scrollY +
-      canvas_rect.height / 2 -
-      element.offsetHeight / 2
-    }px`;
-
-    element.style.left = `${
-      canvas_rect.x +
-      window.scrollX +
-      canvas_rect.width / 2 -
-      element.offsetWidth / 2
-    }px`;
   }
 
   startGameIntro() {
@@ -288,7 +268,6 @@ class Game {
         document.getElementById("win-overlay").innerHTML;
     }
     game_over_window.style = "display: flex";
-    this.centerElementInCanvas(game_over_window);
   }
 
   restartGame() {
