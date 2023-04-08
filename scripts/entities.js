@@ -114,7 +114,7 @@ class Player extends Entity {
   }
 
   activatePower() {
-    // If the ability is already active, clear the existing interval and start a new one
+    // If the ability is already active, clear the existing interval
     if (this.has_ability) {
       clearInterval(this.intervalId);
       clearTimeout(this.timeoutId);
@@ -225,7 +225,7 @@ class Enemy extends Entity {
       );
     });
 
-    // with probability 0.2, return random direction
+    // with 20% probability, return random direction
     // if (Math.random() < 0.2) {
     //   const randomIndex = Math.floor(Math.random() * validSurroundings.length);
     //   return validSurroundings[randomIndex].direction;

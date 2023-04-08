@@ -20,7 +20,6 @@ class Game {
     this._update_canvas_subject = new rxjs.Subject();
     this._end_game_subject = new rxjs.Subject();
     this._powerup_observable = new rxjs.Subject();
-    this.suscribeToPowerUpAudio();
     this._clock_observable = new rxjs.interval(1000 / this.fps);
     this._keyboard_observable = new rxjs.fromEvent(document, "keydown").pipe(
       rxjs.operators.map((event) => {
@@ -89,10 +88,6 @@ class Game {
         }
       }
     );
-  }
-
-  unsubscribePowerUp() {
-    this.powerup_subscription.unsubscribe();
   }
 
   startPowerUpAudio() {
