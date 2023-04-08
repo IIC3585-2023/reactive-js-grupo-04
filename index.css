@@ -237,7 +237,7 @@ body {
   background-color: #e6e6e6;
   opacity: 0.5;
   cursor: not-allowed;
-  color: black
+  color: black;
 }
 
 .glow-effect {
@@ -257,11 +257,14 @@ body {
 .container-player-lifes {
   display: flex;
   flex-direction: row;
+  margin-top: 0.5em;
 }
 
 .container-player-lifes img {
   width: 40px;
+  margin: 0 0.3em;
   height: auto;
+  filter: drop-shadow(2px 2px 2px rgba(0, 0, 0, 0.5));
 }
 
 .skip-box-overlay {
