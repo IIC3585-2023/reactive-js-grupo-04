@@ -17,6 +17,7 @@ class Game {
     this.audio_powerup = document.getElementById("audio-powerup");
     this.audio_gameover = document.getElementById("audio-gameover");
     this.audio_main.currentTime = 0;
+    this.audio_powerup.currentTime = 0;
     this._update_canvas_subject = new rxjs.Subject();
     this._end_game_subject = new rxjs.Subject();
     this._powerup_observable = new rxjs.Subject();
