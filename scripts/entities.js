@@ -236,16 +236,28 @@ class Enemy extends Entity {
     // choose direction more close to the player
     if (players_array) {
       players_array.forEach((player) => {
-        // absolute value of the distance between the player and the enemy
-        // root((x2 - x1)^2 + (y2 - y1)^2)
-        validSurroundings.forEach((surrounding) => {
-          const { x, y } = surrounding.coords;
-          const distance = Math.sqrt(
-            Math.pow(player.position.x - x * this.size, 2) +
-              Math.pow(player.position.y - y * this.size, 2)
-          );
-          surrounding.distance.push(distance);
-        });
+        if (!player.has_ability){
+          // absolute value of the distance between the player and the enemy
+          // root((x2 - x1)^2 + (y2 - y1)^2)
+          validSurroundings.forEach((surrounding) => {
+            const { x, y } = surrounding.coords;
+            const distance = Math.sqrt(
+              Math.pow(player.position.x - x * this.size, 2) +
+                Math.pow(player.position.y - y * this.size, 2)
+            );
+            surrounding.distance.push(distance);
+          });
+        }
+        else {
+          validSurroundings.forEach((surrounding) => {
+            const { x, y } = surrounding.coords;
+            const distance = Math.sqrt(
+              Math.pow(player.position.x - x * this.size, 2) +
+                Math.pow(player.position.y - y * this.size, 2)
+            );
+            surrounding.distance.push(-distance);
+          });
+        }
       });
     }
 
