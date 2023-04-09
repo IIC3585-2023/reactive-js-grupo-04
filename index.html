@@ -40,6 +40,9 @@
         const muteIcon = document.getElementById("mute-icon");
         muteIcon.classList.toggle("fa-volume-up");
         muteIcon.classList.toggle("fa-volume-off");
+        const xMark = document.getElementById("x-mark");
+        xMark.style.display =
+          xMark.style.display === "block" ? "none" : "block";
       }
     </script>
   </head>
@@ -49,6 +52,7 @@
         <img src="assets/hxh.png" alt="hxh" class="logo" />
         <button id="mute-button" onclick="toggleMute()">
           <i class="fa fa-volume-up" id="mute-icon"></i>
+          <i class="fa fa-times" id="x-mark"></i>
         </button>
       </section>
       <h2>Hunter's Exam: Final Stage</h2>
