@@ -8,6 +8,7 @@
     #d6d6e7 0 -3px 0 inset;
   --box-shadow-button-2: rgba(45, 35, 66, 0.1) 0 7px 13px -3px,
     #831524 0 -3px 0 inset;
+  --filter-drop-shadow: drop-shadow(2px 2px 2px rgba(0, 0, 0, 0.5));
   --text-color: black;
   --font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
     Segoe UI, Roboto, Helvetica Neue, Arial, Noto Sans, sans-serif,
@@ -267,7 +268,7 @@ body {
   width: 40px;
   margin: 0 0.3em;
   height: auto;
-  filter: drop-shadow(2px 2px 2px rgba(0, 0, 0, 0.5));
+  filter: var(--filter-drop-shadow);
 }
 
 .overlay {
@@ -310,7 +311,7 @@ body {
 
 #hunter-license {
   width: 100px;
-  filter: drop-shadow(2px 2px 2px rgba(0, 0, 0, 0.5));
+  filter: var(--filter-drop-shadow);
 }
 
 #gon-crying {
@@ -330,7 +331,8 @@ footer {
 
 .github {
   text-decoration: none;
-  padding: 0.4rem;
+  padding: 0.4em;
+  padding-bottom: 0.5em;
   border-radius: 0.5rem;
   margin: 0.5rem;
   width: 100%;
@@ -338,10 +340,14 @@ footer {
   color: #f1f5f9;
   transition: all 0.3s ease-in-out;
   border: 2px solid black;
+  box-shadow: rgba(45, 35, 66, 0.4) 0 2px 4px,
+    rgba(45, 35, 66, 0.1) 0 7px 13px -3px, #242e3c 0 -3px 0 inset;
 }
 
 .github:hover {
-  background-color: #4d5c6f;
+  background-color: #404e61;
+  box-shadow: rgba(45, 35, 66, 0.4) 0 4px 8px,
+    rgba(45, 35, 66, 0.1) 0 7px 13px -3px, #242e3c 0 -3px 0 inset;
 }
 
 @keyframes key-animation {
@@ -371,14 +377,27 @@ footer {
 #mute-button {
   all: unset;
   position: absolute;
-  right: 0;
   top: 0;
+  right: 0;
   cursor: pointer;
   margin: 0 1em;
   width: 30px;
+  color: var(--bg-color-button-2);
 }
 
-#mute-button i {
+#mute-icon {
   font-size: 2em;
-  color: var(--bg-color-button-2);
+}
+
+#mute-button:hover #x-mark,
+#mute-button:hover #mute-icon {
+  filter: drop-shadow(2px 2px 2px rgba(0, 0, 0, 0.2));
+}
+
+#x-mark {
+  display: none;
+  position: absolute;
+  top: 2px;
+  right: -4px;
+  font-size: 1.5em;
 }
