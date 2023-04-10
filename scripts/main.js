@@ -112,7 +112,7 @@ const main = () => {
   const start_button = document.getElementById("start-button");
   const restart_button = document.getElementById("restart-button");
 
-  const KEYMAP = {
+  const KEYMAPS = {
     player1: {
       ArrowUp: "up",
       ArrowDown: "down",
@@ -137,7 +137,7 @@ const main = () => {
     players_select,
     start_button,
     restart_button,
-    KEYMAP
+    KEYMAPS
   );
   main_scene.init();
 };

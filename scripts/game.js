@@ -22,11 +22,21 @@ class Game {
     this._end_game_subject = new rxjs.Subject();
     this._powerup_observable = new rxjs.Subject();
     this._clock_observable = new rxjs.interval(1000 / this.fps);
-    this._keyboard_observable = new rxjs.fromEvent(document, "keydown").pipe(
+    this._keyboard_observable_1 = new rxjs.fromEvent(document, "keydown").pipe(
       rxjs.operators.map((event) => {
         if (event instanceof KeyboardEvent) {
           if (event.key in this.keymaps.player1) {
             const direction = this.keymaps.player1[event.key];
+            return direction;
+          }
+        }
+      })
+    );
+    this._keyboard_observable_2 = new rxjs.fromEvent(document, "keydown").pipe(
+      rxjs.operators.map((event) => {
+        if (event instanceof KeyboardEvent) {
+          if (event.key in this.keymaps.player2) {
+            const direction = this.keymaps.player2[event.key];
             return direction;
           }
         }
@@ -68,7 +78,7 @@ class Game {
         }
       }
     }
-    if (entity.id.includes("player")) {
+    if ((entity.id === "player1") || (entity.id === "player2")) {
       if (entity.checkPlayerRewardCollision(this.board)) {
         this._update_canvas_subject.next(this.entities);
       }
@@ -174,9 +184,16 @@ class Game {
       player.clock_subscription = this._clock_observable.subscribe(() =>
         player.callbackMoveSignal(this.board)
       );
-      player.keyboard_subscription = this._keyboard_observable.subscribe(
-        (direction) => player.callbackKeyboardEventSignal(direction)
-      );
+      if (player.id == "player1"){
+        player.keyboard_subscription = this._keyboard_observable_1.subscribe(
+          (direction) => player.callbackKeyboardEventSignal(direction)
+        );
+      }
+      else {
+        player.keyboard_subscription = this._keyboard_observable_2.subscribe(
+          (direction) => player.callbackKeyboardEventSignal(direction)
+        );
+      }
     });
     this.enemies.forEach(
       (enemy) =>
@@ -200,6 +217,9 @@ class Game {
       this._powerup_observable
     );
     this.players.push(player1);
+
+    if (this.mode == 2) this.addSecondPlayer();
+
     this.entities.push(...this.players);
 
     // enemy 1
@@ -215,6 +235,21 @@ class Game {
     this.enemies.push(enemy1);
     this.entities.push(...this.enemies);
     this._update_canvas_subject.next(this.entities);
+  }
+
+  addSecondPlayer(){
+    const sizeCharacter = this.sizeCell;
+    // player 2
+    let { x, y } = this.board.getRandomValidCell();
+    const player2 = new Player(
+      "player2",
+      x * sizeCharacter,
+      y * sizeCharacter,
+      sizeCharacter,
+      this.keymaps.player2,
+      this._powerup_observable
+    );
+    this.players.push(player2);
   }
 
   killEntity(entity) {
@@ -281,7 +316,7 @@ class Game {
   }
 
   restartHeartSprites() {
-    for (let player_number = 1; player_number < 2; player_number++) {
+    for (let player_number = 1; player_number < 3; player_number++) {
       for (let heart_number = 1; heart_number < 4; heart_number++) {
         document.getElementById(
           `player${player_number}-life${heart_number}`
