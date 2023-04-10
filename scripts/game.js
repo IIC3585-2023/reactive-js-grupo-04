@@ -1,7 +1,8 @@
 class Game {
-  constructor(board, mode, sizeCell, canvas, keymaps) {
+  constructor(board, mode, type_board, sizeCell, canvas, keymaps) {
     this.board = board;
     this.mode = mode;
+    this.type_board= type_board;
     this.sizeCell = sizeCell;
     this.canvas = canvas;
     this.keymaps = keymaps;
@@ -117,16 +118,6 @@ class Game {
     }
   }
 
-  // refreshSubscription() {
-  //   this.suscribeToPowerUpAudio();
-  //   this.move_subscription = rxjs
-  //     .merge(...this.entities.map((entity) => entity.position_subject))
-  //     .subscribe((entity) => {
-  //       this.checkEntitiesCollissions(entity);
-  //     });
-  // }
-
-
   refreshSubscription() {
     this.suscribeToPowerUpAudio();
     this.move_subscription = rxjs
@@ -235,8 +226,17 @@ class Game {
     this.entities.push(...this.players);
 
     this.addEnemy("enemy1");
-    this.addEnemy("enemy2");
-    this.addEnemy("enemy3");
+
+    if (this.type_board == 1){
+      this.addEnemy("enemy2");
+    }
+    else if (this.type_board == 2){
+      this.addEnemy("enemy2");
+      this.addEnemy("enemy3");
+    }
+    // console.log(this.board);
+    // this.addEnemy("enemy2");
+    // this.addEnemy("enemy3");
 
     this.entities.push(...this.enemies);
     this._update_canvas_subject.next(this.entities);
