@@ -122,14 +122,16 @@ class Player extends Entity {
     }
     this.has_ability = true;
     this._powerup_observable.next(true);
-    this.img = document.getElementById(`${this.id}-${this.img_count}`);
+    this.img = document.getElementById(`${"player1"}-${this.img_count}`);
+    // this.img = document.getElementById(`${this.id}-${this.img_count}`);
     // Start the interval
     this.intervalId = setInterval(() => {
       if (this.img_count == 5) {
         this.img_count = 0;
       }
       this.img_count++;
-      this.img = document.getElementById(`${this.id}-${this.img_count}`);
+      // this.img = document.getElementById(`${this.id}-${this.img_count}`);
+      this.img = document.getElementById(`${"player1"}-${this.img_count}`);
     }, this.ability_animation_speed);
 
     // Stop the interval after 5 seconds
@@ -196,7 +198,7 @@ class Enemy extends Entity {
 
   checkCollisionWithPlayers(players_array) {
     let collision_entity_to_die = null;
-    players_array.every((player) => {
+    players_array.forEach((player) => {
       if (
         player.getMapCenterX() === this.getMapCenterX() &&
         player.getMapCenterY() === this.getMapCenterY()

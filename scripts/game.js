@@ -83,6 +83,11 @@ class Game {
         this._update_canvas_subject.next(this.entities);
       }
     }
+    if (entity.id === "player2") {
+      if (entity.checkPlayerRewardCollision(this.board)) {
+        this._update_canvas_subject.next(this.entities);
+      }
+    }
   }
 
   suscribeToPowerUpAudio() {
@@ -217,9 +222,10 @@ class Game {
       this._powerup_observable
     );
     this.players.push(player1);
-    this.entities.push(...this.players);
 
     if (this.mode == 2) this.addSecondPlayer();
+
+    this.entities.push(...this.players);
 
     // enemy 1
     ({ x, y } = this.board.getRandomValidCell());
@@ -249,7 +255,6 @@ class Game {
       this._powerup_observable
     );
     this.players.push(player2);
-    this.entities.push(...this.players);
   }
 
   killEntity(entity) {
