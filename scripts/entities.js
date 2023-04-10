@@ -237,10 +237,10 @@ class Enemy extends Entity {
     });
 
     // with 20% probability, return random direction
-    // if (Math.random() < 0.2) {
-    //   const randomIndex = Math.floor(Math.random() * validSurroundings.length);
-    //   return validSurroundings[randomIndex].direction;
-    // }
+    if (Math.random() < 0.2) {
+      const randomIndex = Math.floor(Math.random() * validSurroundings.length);
+      return validSurroundings[randomIndex].direction;
+    }
 
     // choose direction more close to the player
     if (players_array) {
