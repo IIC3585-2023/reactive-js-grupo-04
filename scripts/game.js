@@ -234,9 +234,6 @@ class Game {
       this.addEnemy("enemy2");
       this.addEnemy("enemy3");
     }
-    // console.log(this.board);
-    // this.addEnemy("enemy2");
-    // this.addEnemy("enemy3");
 
     this.entities.push(...this.enemies);
     this._update_canvas_subject.next(this.entities);
