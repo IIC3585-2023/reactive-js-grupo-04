@@ -84,12 +84,18 @@ class Game {
         this._update_canvas_subject.next(this.entities);
         // // show gif when powerup is activated
         // document.getElementById(`${entity.id}-gif`).style.display = "block";
-        // this._clock_observable = null;
-        // const secondsToShow = 4;
+        // const audio = document.getElementById(`audio-${entity.id}`);
+        // audio.play();
+        // this.removeClockSubscription();
+        // const secondsToShow = 5;
         // setTimeout(() => {
         //   document.getElementById(`${entity.id}-gif`).style.display = "none";
-        //   this._clock_observable = new rxjs.interval(1000 / this.fps);
+        //   audio.pause();
+        //   audio.currentTime = 0;
+        //   this.refreshClockSubscription();
+        //   entity.activatePower();
         // }, secondsToShow * 1000);
+        entity.activatePower();
       }
     }
   }
@@ -210,6 +216,20 @@ class Game {
         ))
     );
     this.refreshSubscription();
+  }
+
+  removeClockSubscription() {
+    this.entities.forEach((entity) => {
+      if (entity.clock_subscription) entity.clock_subscription.unsubscribe();
+    });
+  }
+
+  refreshClockSubscription() {
+    this.entities.forEach((entity) => {
+        entity.clock_subscription = this._clock_observable.subscribe(() =>
+          entity.callbackMoveSignal(this.board)
+        );
+    });
   }
 
   addPlayersAndEnemies() {

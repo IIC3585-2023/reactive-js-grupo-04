@@ -159,7 +159,6 @@ class Player extends Entity {
         this.getMapCenterY() === reward_object.pos_y
     );
     if (collisions.length > 0) {
-      this.activatePower();
       board.reward_data = board.reward_data.filter(
         (x) => !collisions.includes(x)
       );
