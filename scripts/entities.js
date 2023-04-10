@@ -141,6 +141,13 @@ class Player extends Entity {
     }, this.ability_duration);
   }
 
+  desactivatePower() {
+    clearInterval(this.intervalId);
+    clearTimeout(this.timeoutId);
+    this._powerup_observable.next(false);
+    this.img = document.getElementById(this.id);
+  }
+
   takeDamage() {
     this.lifes -= 1;
   }
@@ -196,6 +203,7 @@ class Enemy extends Entity {
 
   checkCollisionWithPlayers(players_array) {
     let collision_entity_to_die = null;
+    let player_powered = null;
     players_array.forEach((player) => {
       if (
         player.getMapCenterX() === this.getMapCenterX() &&
@@ -203,12 +211,13 @@ class Enemy extends Entity {
       ) {
         if (player.has_ability) {
           collision_entity_to_die = this;
+          player_powered = player;
         } else {
           collision_entity_to_die = player;
         }
       }
     });
-    return collision_entity_to_die;
+    return {to_die: collision_entity_to_die, player_powered: player_powered}
   }
 
   chooseDirection(board, players_array) {
