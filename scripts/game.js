@@ -62,7 +62,7 @@ class Game {
   checkEntitiesCollissions(entity) {
     this._update_canvas_subject.next(this.entities);
     if (entity.id.includes("enemy")) {
-      let collision_entity_to_die = entity.checkCollisionWithPlayers(
+      let {to_die: collision_entity_to_die, player_powered} = entity.checkCollisionWithPlayers(
         this.players
       );
       if (collision_entity_to_die) {
@@ -70,6 +70,8 @@ class Game {
           // enemy has to die
           this.killEnemy(entity);
           this._update_canvas_subject.next(this.entities);
+          player_powered.has_ability = false;
+          player_powered.desactivatePower();
           if (this.enemies.length == 0) this.stopGame();
         } else {
           this.killPlayer(collision_entity_to_die);
@@ -114,6 +116,16 @@ class Game {
       this.audio_main.play();
     }
   }
+
+  // refreshSubscription() {
+  //   this.suscribeToPowerUpAudio();
+  //   this.move_subscription = rxjs
+  //     .merge(...this.entities.map((entity) => entity.position_subject))
+  //     .subscribe((entity) => {
+  //       this.checkEntitiesCollissions(entity);
+  //     });
+  // }
+
 
   refreshSubscription() {
     this.suscribeToPowerUpAudio();
@@ -222,17 +234,10 @@ class Game {
 
     this.entities.push(...this.players);
 
-    // enemy 1
-    ({ x, y } = this.board.getRandomValidCell());
+    this.addEnemy("enemy1");
+    this.addEnemy("enemy2");
+    this.addEnemy("enemy3");
 
-    const enemy1 = new Enemy(
-      "enemy1",
-      x * sizeCharacter,
-      y * sizeCharacter,
-      sizeCharacter,
-      this.players
-    );
-    this.enemies.push(enemy1);
     this.entities.push(...this.enemies);
     this._update_canvas_subject.next(this.entities);
   }
@@ -250,6 +255,20 @@ class Game {
       this._powerup_observable
     );
     this.players.push(player2);
+  }
+
+  addEnemy(id){
+    const sizeCharacter = this.sizeCell;
+    let { x, y } = this.board.getRandomValidCell();
+
+    const enemy = new Enemy(
+      id,
+      x * sizeCharacter,
+      y * sizeCharacter,
+      sizeCharacter,
+      this.players
+    );
+    this.enemies.push(enemy);
   }
 
   killEntity(entity) {
@@ -339,6 +358,7 @@ class Game {
     });
     if (this.powerup_subscription) this.powerup_subscription.unsubscribe();
     if (this.move_subscription) this.move_subscription.unsubscribe();
+    if (this._enemies_observable) this._enemies_observable.unsubscribe();
     console.log(`All entities unsubscribed: ${i}/${this.entities.length}`);
   }
 }
