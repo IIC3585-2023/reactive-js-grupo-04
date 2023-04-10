@@ -78,12 +78,7 @@ class Game {
         }
       }
     }
-    if (entity.id === "player1") {
-      if (entity.checkPlayerRewardCollision(this.board)) {
-        this._update_canvas_subject.next(this.entities);
-      }
-    }
-    if (entity.id === "player2") {
+    if ((entity.id === "player1") || (entity.id === "player2")) {
       if (entity.checkPlayerRewardCollision(this.board)) {
         this._update_canvas_subject.next(this.entities);
       }
