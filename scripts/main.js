@@ -21,7 +21,7 @@ class MainScene {
     this.keymaps = keymaps;
     this.board = new Board(boards[0].board);
     this.mode = 1;
-    this.type_board = 0;
+    this.difficulty = 0;
     this.canvas = null;
     this.game = null;
     this.game_ended_signal_subcription = null;
@@ -30,8 +30,7 @@ class MainScene {
   init() {
     this.map_select.addEventListener("change", (e) => {
       this.board = new Board(this.boards[e.target.value].board);
-      // console.log("linea 32 main.js", e.target.value);
-      this.type_board = e.target.value;
+      this.difficulty = this.boards[e.target.value].difficulty;
       this.newCanvas();
     });
     this.players_select.addEventListener("change", (e) => {
@@ -78,7 +77,7 @@ class MainScene {
     this.game = new Game(
       this.board,
       this.mode,
-      this.type_board,
+      this.difficulty,
       this.sizeCell,
       this.canvas,
       this.keymaps

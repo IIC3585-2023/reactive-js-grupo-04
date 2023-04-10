@@ -202,6 +202,10 @@
           <span>to skip intro</span>
         </div>
         <div class="overlay game-over-overlay" id="game-over-overlay"></div>
+        <div class="overlay-gif" id="overlay-gif">
+          <img src="assets/gifs/gon.gif" alt="gif" id="player1-gif"/>
+          <img src="assets/gifs/killua.gif" alt="gif" id="player2-gif"/>
+        </div>
       </div>
       <section class="players">
         <div class="controls">
@@ -293,6 +297,18 @@
       <audio
         id="audio-gameover"
         src="assets/audios/gameover.mp3"
+        loop
+        preload="auto"
+      ></audio>
+      <audio 
+        id="audio-player1"
+        src="assets/audios/gon_audio.mp3"
+        loop
+        preload="auto"
+      ></audio>
+      <audio 
+        id="audio-player2"
+        src="assets/audios/gon_audio.mp3"
         loop
         preload="auto"
       ></audio>

@@ -159,7 +159,6 @@ class Player extends Entity {
         this.getMapCenterY() === reward_object.pos_y
     );
     if (collisions.length > 0) {
-      this.activatePower();
       board.reward_data = board.reward_data.filter(
         (x) => !collisions.includes(x)
       );
@@ -237,10 +236,10 @@ class Enemy extends Entity {
     });
 
     // with 20% probability, return random direction
-    // if (Math.random() < 0.2) {
-    //   const randomIndex = Math.floor(Math.random() * validSurroundings.length);
-    //   return validSurroundings[randomIndex].direction;
-    // }
+    if (Math.random() < 0.2) {
+      const randomIndex = Math.floor(Math.random() * validSurroundings.length);
+      return validSurroundings[randomIndex].direction;
+    }
 
     // choose direction more close to the player
     if (players_array) {
