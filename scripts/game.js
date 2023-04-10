@@ -1,8 +1,8 @@
 class Game {
-  constructor(board, mode, type_board, sizeCell, canvas, keymaps) {
+  constructor(board, mode, difficulty, sizeCell, canvas, keymaps) {
     this.board = board;
     this.mode = mode;
-    this.type_board= type_board;
+    this.difficulty = difficulty;
     this.sizeCell = sizeCell;
     this.canvas = canvas;
     this.keymaps = keymaps;
@@ -63,9 +63,8 @@ class Game {
   checkEntitiesCollissions(entity) {
     this._update_canvas_subject.next(this.entities);
     if (entity.id.includes("enemy")) {
-      let {to_die: collision_entity_to_die, player_powered} = entity.checkCollisionWithPlayers(
-        this.players
-      );
+      let { to_die: collision_entity_to_die, player_powered } =
+        entity.checkCollisionWithPlayers(this.players);
       if (collision_entity_to_die) {
         if (collision_entity_to_die.id === entity.id) {
           // enemy has to die
@@ -81,7 +80,7 @@ class Game {
         }
       }
     }
-    if ((entity.id === "player1") || (entity.id === "player2")) {
+    if (entity.id === "player1" || entity.id === "player2") {
       if (entity.checkPlayerRewardCollision(this.board)) {
         this._update_canvas_subject.next(this.entities);
       }
@@ -187,12 +186,11 @@ class Game {
       player.clock_subscription = this._clock_observable.subscribe(() =>
         player.callbackMoveSignal(this.board)
       );
-      if (player.id == "player1"){
+      if (player.id == "player1") {
         player.keyboard_subscription = this._keyboard_observable_1.subscribe(
           (direction) => player.callbackKeyboardEventSignal(direction)
         );
-      }
-      else {
+      } else {
         player.keyboard_subscription = this._keyboard_observable_2.subscribe(
           (direction) => player.callbackKeyboardEventSignal(direction)
         );
@@ -226,11 +224,9 @@ class Game {
     this.entities.push(...this.players);
 
     this.addEnemy("enemy1");
-
-    if (this.type_board == 1){
+    if (this.difficulty == 1) {
       this.addEnemy("enemy2");
-    }
-    else if (this.type_board == 2){
+    } else if (this.difficulty == 2) {
       this.addEnemy("enemy2");
       this.addEnemy("enemy3");
     }
@@ -239,7 +235,7 @@ class Game {
     this._update_canvas_subject.next(this.entities);
   }
 
-  addSecondPlayer(){
+  addSecondPlayer() {
     const sizeCharacter = this.sizeCell;
     // player 2
     let { x, y } = this.board.getRandomValidCell();
@@ -254,7 +250,7 @@ class Game {
     this.players.push(player2);
   }
 
-  addEnemy(id){
+  addEnemy(id) {
     const sizeCharacter = this.sizeCell;
     let { x, y } = this.board.getRandomValidCell();
 
@@ -324,6 +320,7 @@ class Game {
 
   restartGame() {
     this.audio_main.pause();
+    this.stopAudio(this.audio_powerup);
     this.restartHeartSprites();
     this.unsubscribeAll();
     this.board.restart();

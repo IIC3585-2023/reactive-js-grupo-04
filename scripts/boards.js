@@ -57,10 +57,12 @@ class Board {
   }
 }
 
+// difficulty: 0 = easy, 1 = medium, 2 = hard
+
 const BOARDS = [
   {
     id: 0,
-    difficulty: "easy",
+    difficulty: 1,
     board: `
         ##############
         #.......#R...#
@@ -77,7 +79,7 @@ const BOARDS = [
   },
   {
     id: 1,
-    difficulty: "medium",
+    difficulty: 1,
     board: `
         ############################
         #............##...........R#
@@ -93,7 +95,7 @@ const BOARDS = [
   },
   {
     id: 2,
-    difficulty: "hard",
+    difficulty: 2,
     board: `
         #############
         #.R.........#
@@ -113,7 +115,7 @@ const BOARDS = [
   },
   {
     id: 3,
-    difficulty: "mobile-1",
+    difficulty: 1,
     board: `
       #######
       #.....#
@@ -127,7 +129,7 @@ const BOARDS = [
   },
   {
     id: 4,
-    difficulty: "mobile-2",
+    difficulty: 1,
     board: `
       #######
       #.....#
@@ -141,7 +143,7 @@ const BOARDS = [
   },
   {
     id: 5,
-    difficulty: "mobile-3",
+    difficulty: 2,
     board: `
       #######
       #....R#
