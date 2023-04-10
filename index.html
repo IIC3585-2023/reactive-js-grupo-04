@@ -4,6 +4,85 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>HxH Game - G4</title>
+    <!-- public -->
+    <link rel="icon" href="public/favicon.ico" />
+    <link
+      rel="apple-touch-icon"
+      sizes="57x57"
+      href="public/apple-icon-57x57.png"
+    />
+    <link
+      rel="apple-touch-icon"
+      sizes="60x60"
+      href="public/apple-icon-60x60.png"
+    />
+    <link
+      rel="apple-touch-icon"
+      sizes="72x72"
+      href="public/apple-icon-72x72.png"
+    />
+    <link
+      rel="apple-touch-icon"
+      sizes="76x76"
+      href="public/apple-icon-76x76.png"
+    />
+    <link
+      rel="apple-touch-icon"
+      sizes="114x114"
+      href="public/apple-icon-114x114.png"
+    />
+    <link
+      rel="apple-touch-icon"
+      sizes="120x120"
+      href="public/apple-icon-120x120.png"
+    />
+    <link
+      rel="apple-touch-icon"
+      sizes="144x144"
+      href="public/apple-icon-144x144.png"
+    />
+    <link
+      rel="apple-touch-icon"
+      sizes="152x152"
+      href="public/apple-icon-152x152.png"
+    />
+    <link
+      rel="apple-touch-icon"
+      sizes="180x180"
+      href="public/apple-icon-180x180.png"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="192x192"
+      href="public/android-icon-192x192.png"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="32x32"
+      href="public/favicon-32x32.png"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="96x96"
+      href="public/favicon-96x96.png"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="16x16"
+      href="public/favicon-16x16.png"
+    />
+    <link rel="manifest" href="public/manifest.json" />
+    <meta name="msapplication-TileColor" content="#ffffff" />
+    <meta name="msapplication-TileImage" content="public/ms-icon-144x144.png" />
+    <meta name="theme-color" content="#ffffff" />
+    <meta name="description" content="Hunter's Exam: Final Stage" />
+    <meta property="og:title" content="HxH Game - G4" />
+    <meta property="og:description" content="Hunter's Exam: Final Stage" />
+    <!--  -->
 
     <link rel="stylesheet" href="index.css" />
     <link
@@ -154,60 +233,27 @@
       </section>
     </main>
     <div class="sprites">
-      <img
-        id="player1"
-        src="assets/player1/player1.png"
-        hidden
-        style="display: none"
-      />
-      <img
-        id="player1-1"
-        src="assets/player1/player1-1.png"
-        hidden
-        style="display: none"
-      />
-      <img
-        id="player1-2"
-        src="assets/player1/player1-2.png"
-        hidden
-        style="display: none"
-      />
-      <img
-        id="player1-3"
-        src="assets/player1/player1-3.png"
-        hidden
-        style="display: none"
-      />
-      <img
-        id="player1-4"
-        src="assets/player1/player1-4.png"
-        hidden
-        style="display: none"
-      />
-      <img
-        id="player1-5"
-        src="assets/player1/player1-5.png"
-        hidden
-        style="display: none"
-      />
+      <img id="player1" src="assets/player1/player1.png" hidden />
+      <img id="player1-1" src="assets/player1/player1-1.png" hidden />
+      <img id="player1-2" src="assets/player1/player1-2.png" hidden />
+      <img id="player1-3" src="assets/player1/player1-3.png" hidden />
+      <img id="player1-4" src="assets/player1/player1-4.png" hidden />
+      <img id="player1-5" src="assets/player1/player1-5.png" hidden />
 
-      <img id="player2" src="assets/killua.png" hidden style="display: none" />
-      <img id="enemy1" src="assets/hisoka.png" hidden style="display: none" />
-      <img id="enemy2" src="assets/illumi.png" hidden style="display: none" />
+      <img id="player2" src="assets/player2/player2.png" hidden />
+      <img id="player2-1" src="assets/player2/player2-1.png" hidden />
+      <img id="player2-2" src="assets/player2/player2-2.png" hidden />
+      <img id="player2-3" src="assets/player2/player2-3.png" hidden />
+      <img id="player2-4" src="assets/player2/player2-4.png" hidden />
+      <img id="player2-5" src="assets/player2/player2-5.png" hidden />
 
-      <img
-        id="reward1"
-        src="assets/rewards/reward1.png"
-        hidden
-        style="display: none"
-      />
-      <img
-        id="reward2"
-        src="assets/rewards/reward2.png"
-        hidden
-        style="display: none"
-      />
-      <img id="tree" src="assets/tree.png" hidden style="display: none" />
+      <img id="enemy1" src="assets/hisoka.png" hidden />
+      <img id="enemy2" src="assets/illumi.png" hidden />
+      <img id="enemy3" src="assets/tonpa.png" hidden />
+
+      <img id="reward1" src="assets/rewards/reward1.png" hidden />
+      <img id="reward2" src="assets/rewards/reward2.png" hidden />
+      <img id="tree" src="assets/tree1.png" hidden />
 
       <div id="win-overlay" hidden style="display: none">
         <span class="title-game-over">Congratulations! You won!</span>
@@ -227,10 +273,29 @@
         </span>
         <img src="assets/gon_crying.png" alt="gon-crying" id="gon-crying" />
       </div>
-      <audio id="audio-intro" src="assets/audios/intro.mp3"></audio>
-      <audio id="audio-main" src="assets/audios/main.mp3" loop></audio>
-      <audio id="audio-powerup" src="assets/audios/powerup.mp3" loop></audio>
-      <audio id="audio-gameover" src="assets/audios/gameover.mp3" loop></audio>
+      <audio
+        id="audio-intro"
+        src="assets/audios/intro.mp3"
+        preload="auto"
+      ></audio>
+      <audio
+        id="audio-main"
+        src="assets/audios/main.mp3"
+        loop
+        preload="auto"
+      ></audio>
+      <audio
+        id="audio-powerup"
+        src="assets/audios/powerup.mp3"
+        loop
+        preload="auto"
+      ></audio>
+      <audio
+        id="audio-gameover"
+        src="assets/audios/gameover.mp3"
+        loop
+        preload="auto"
+      ></audio>
     </div>
 
     <footer>

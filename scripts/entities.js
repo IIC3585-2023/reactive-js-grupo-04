@@ -246,12 +246,12 @@ class Enemy extends Entity {
             Math.pow(player.position.x - x * this.size, 2) +
               Math.pow(player.position.y - y * this.size, 2)
           );
-        if (!player.has_ability){
-          surrounding.distance.push(distance);
-        }
-        else {
-          surrounding.distance.push(-distance);
-        }
+          if (!player.has_ability){
+            surrounding.distance.push(distance);
+          }
+          else {
+            surrounding.distance.push(-distance);
+          }
         });
       });
     }

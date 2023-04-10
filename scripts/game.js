@@ -61,7 +61,7 @@ class Game {
 
   checkEntitiesCollissions(entity) {
     this._update_canvas_subject.next(this.entities);
-    if (entity.id === "enemy1") {
+    if (entity.id.includes("enemy")) {
       let collision_entity_to_die = entity.checkCollisionWithPlayers(
         this.players
       );
