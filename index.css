@@ -284,6 +284,19 @@ body {
   border-radius: 0.5em;
 }
 
+.overlay-gif {
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.overlay-gif img {
+  display: none;
+  width: 100%;
+  max-width: 300px;
+  filter: drop-shadow(0 0 1rem #000)
+}
+
 .skip-box-overlay {
   height: 100px;
 }

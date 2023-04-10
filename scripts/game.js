@@ -23,25 +23,11 @@ class Game {
     this._end_game_subject = new rxjs.Subject();
     this._powerup_observable = new rxjs.Subject();
     this._clock_observable = new rxjs.interval(1000 / this.fps);
-    this._keyboard_observable_1 = new rxjs.fromEvent(document, "keydown").pipe(
-      rxjs.operators.map((event) => {
-        if (event instanceof KeyboardEvent) {
-          if (event.key in this.keymaps.player1) {
-            const direction = this.keymaps.player1[event.key];
-            return direction;
-          }
-        }
-      })
+    this._keyboard_observable_1 = this.declareKeyBoardObservable(
+      this.keymaps.player1
     );
-    this._keyboard_observable_2 = new rxjs.fromEvent(document, "keydown").pipe(
-      rxjs.operators.map((event) => {
-        if (event instanceof KeyboardEvent) {
-          if (event.key in this.keymaps.player2) {
-            const direction = this.keymaps.player2[event.key];
-            return direction;
-          }
-        }
-      })
+    this._keyboard_observable_2 = this.declareKeyBoardObservable(
+      this.keymaps.player2
     );
   }
 
@@ -50,6 +36,19 @@ class Game {
       this.unsubscribeAll();
     });
     this.startGameIntro();
+  }
+
+  declareKeyBoardObservable(keymap) {
+    return new rxjs.fromEvent(document, "keydown").pipe(
+      rxjs.operators.map((event) => {
+        if (event instanceof KeyboardEvent) {
+          if (event.key in keymap) {
+            const direction = keymap[event.key];
+            return direction;
+          }
+        }
+      })
+    );
   }
 
   subscribeToCanvasUpdate(callback) {
@@ -83,6 +82,14 @@ class Game {
     if (entity.id === "player1" || entity.id === "player2") {
       if (entity.checkPlayerRewardCollision(this.board)) {
         this._update_canvas_subject.next(this.entities);
+        // // show gif when powerup is activated
+        // document.getElementById(`${entity.id}-gif`).style.display = "block";
+        // this._clock_observable = null;
+        // const secondsToShow = 4;
+        // setTimeout(() => {
+        //   document.getElementById(`${entity.id}-gif`).style.display = "none";
+        //   this._clock_observable = new rxjs.interval(1000 / this.fps);
+        // }, secondsToShow * 1000);
       }
     }
   }
