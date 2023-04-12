@@ -8,6 +8,7 @@ class MainScene {
     players_select,
     start_button,
     restart_button,
+    audios,
     keymaps
   ) {
     this.boards = boards;
@@ -18,6 +19,7 @@ class MainScene {
     this.players_select = players_select;
     this.start_button = start_button;
     this.restart_button = restart_button;
+    this.audios = audios;
     this.keymaps = keymaps;
     this.board = new Board(boards[0].board);
     this.mode = 1;
@@ -80,6 +82,7 @@ class MainScene {
       this.difficulty,
       this.sizeCell,
       this.canvas,
+      this.audios,
       this.keymaps
     ); //game not initialiazed
     this.canvas.updateSubscription = this.game.subscribeToCanvasUpdate(
@@ -107,6 +110,12 @@ class MainScene {
   }
 }
 
+const loadAudio = (element_id) => {
+  const audio = document.getElementById(element_id);
+  audio.load();
+  return audio;
+};
+
 const main = () => {
   const CANVAS = document.getElementById("map");
   const CONTEXT = CANVAS.getContext("2d");
@@ -114,6 +123,13 @@ const main = () => {
   const players_select = document.getElementById("players-select");
   const start_button = document.getElementById("start-button");
   const restart_button = document.getElementById("restart-button");
+
+  const audios = {
+    audio_intro: loadAudio("audio-intro"),
+    audio_main: loadAudio("audio-main"),
+    audio_gameover: loadAudio("audio-gameover"),
+    audio_powerup: loadAudio("audio-powerup"),
+  };
 
   const KEYMAPS = {
     player1: {
@@ -140,6 +156,7 @@ const main = () => {
     players_select,
     start_button,
     restart_button,
+    audios,
     KEYMAPS
   );
   main_scene.init();

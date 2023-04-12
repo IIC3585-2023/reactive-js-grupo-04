@@ -17,6 +17,11 @@
     Liberation Mono, Courier New, monospace;
 }
 
+* {
+  -ms-touch-action: manipulation;
+  touch-action: manipulation;
+}
+
 main {
   display: flex;
   flex-direction: column;
@@ -294,7 +299,7 @@ body {
   display: none;
   width: 100%;
   max-width: 300px;
-  filter: drop-shadow(0 0 1rem #000)
+  filter: drop-shadow(0 0 1rem #000);
 }
 
 .skip-box-overlay {

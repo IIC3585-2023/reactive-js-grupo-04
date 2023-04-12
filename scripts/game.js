@@ -1,5 +1,5 @@
 class Game {
-  constructor(board, mode, difficulty, sizeCell, canvas, keymaps) {
+  constructor(board, mode, difficulty, sizeCell, canvas, audios, keymaps) {
     this.board = board;
     this.mode = mode;
     this.difficulty = difficulty;
@@ -13,10 +13,10 @@ class Game {
     this.powerup_subscription = null;
     this.fps = 60;
     this.pathAssets = "./assets";
-    this.audio_intro = document.getElementById("audio-intro");
-    this.audio_main = document.getElementById("audio-main");
-    this.audio_powerup = document.getElementById("audio-powerup");
-    this.audio_gameover = document.getElementById("audio-gameover");
+    this.audio_intro = audios.audio_intro;
+    this.audio_main = audios.audio_main;
+    this.audio_powerup = audios.audio_powerup;
+    this.audio_gameover = audios.audio_gameover;
     this.audio_main.currentTime = 0;
     this.audio_powerup.currentTime = 0;
     this._update_canvas_subject = new rxjs.Subject();
@@ -226,9 +226,9 @@ class Game {
 
   refreshClockSubscription() {
     this.entities.forEach((entity) => {
-        entity.clock_subscription = this._clock_observable.subscribe(() =>
-          entity.callbackMoveSignal(this.board)
-        );
+      entity.clock_subscription = this._clock_observable.subscribe(() =>
+        entity.callbackMoveSignal(this.board)
+      );
     });
   }
 
