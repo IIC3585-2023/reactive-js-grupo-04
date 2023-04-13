@@ -162,6 +162,15 @@ class Player extends Entity {
       board.reward_data = board.reward_data.filter(
         (x) => !collisions.includes(x)
       );
+      let { x, y } = board.getRandomValidCell();
+      const reward_object = {
+        pos_y: y,
+        pos_x: x,
+        random_reward_number: Math.floor(Math.random() * 2) + 1,
+      };
+
+      board.reward_data.push(reward_object);
+
       return true;
     }
     return false;
