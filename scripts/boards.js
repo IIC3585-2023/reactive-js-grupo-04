@@ -27,6 +27,16 @@ class Board {
     return reward_list;
   }
 
+  addRewardToBoard() {
+    let { x, y } = this.getRandomValidCell();
+    const reward_object = {
+      pos_y: y,
+      pos_x: x,
+      random_reward_number: Math.floor(Math.random() * 2) + 1,
+    };
+    this.reward_data.push(reward_object);
+  }
+
   getCell(x, y) {
     return this.matrix_content[y][x];
   }
