@@ -162,15 +162,9 @@ class Player extends Entity {
       board.reward_data = board.reward_data.filter(
         (x) => !collisions.includes(x)
       );
-      let { x, y } = board.getRandomValidCell();
-      const reward_object = {
-        pos_y: y,
-        pos_x: x,
-        random_reward_number: Math.floor(Math.random() * 2) + 1,
-      };
-
-      board.reward_data.push(reward_object);
-
+      if (board.reward_data.length === 0) {
+        board.addRewardToBoard();
+      }
       return true;
     }
     return false;
@@ -225,7 +219,7 @@ class Enemy extends Entity {
         }
       }
     });
-    return {to_die: collision_entity_to_die, player_powered: player_powered}
+    return { to_die: collision_entity_to_die, player_powered: player_powered };
   }
 
   chooseDirection(board, players_array) {
@@ -261,10 +255,9 @@ class Enemy extends Entity {
             Math.pow(player.position.x - x * this.size, 2) +
               Math.pow(player.position.y - y * this.size, 2)
           );
-          if (!player.has_ability){
+          if (!player.has_ability) {
             surrounding.distance.push(distance);
-          }
-          else {
+          } else {
             surrounding.distance.push(-distance);
           }
         });
