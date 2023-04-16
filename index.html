@@ -75,7 +75,7 @@
       sizes="16x16"
       href="public/favicon-16x16.png"
     />
-    <link rel="manifest" href="public/manifest.json" />
+    <link rel="manifest" href="public/manifest.json" crossorigin="use-credentials" />
     <meta name="msapplication-TileColor" content="#ffffff" />
     <meta name="msapplication-TileImage" content="public/ms-icon-144x144.png" />
     <meta name="theme-color" content="#ffffff" />
@@ -138,8 +138,8 @@
       <section class="container-select">
         <div class="start-game-container">
           <span>Difficulty</span>
-          <select id="map-select" class="start-game">
-            <option value="0">Easy</option>
+          <select id="map-select" class="start-game" >
+            <option value="0" selected>Easy</option>
             <option value="1">Normal</option>
             <option value="2">Hard</option>
             <option value="3">Mobile 1</option>
@@ -254,6 +254,9 @@
       <img id="enemy1" src="assets/hisoka.png" hidden />
       <img id="enemy2" src="assets/illumi.png" hidden />
       <img id="enemy3" src="assets/tonpa.png" hidden />
+      <img id="enemy4" src="assets/hanzo.png" hidden />
+      <img id="enemy5" src="assets/pitou.png" hidden />
+      <img id="enemy6" src="assets/meruem.png" hidden />
 
       <img id="reward1" src="assets/rewards/reward1.png" hidden />
       <img id="reward2" src="assets/rewards/reward2.png" hidden />
