@@ -11,7 +11,7 @@ class Game {
     this.entities = [];
     this.move_subscription = null;
     this.powerup_subscription = null;
-    this.fps = 60;
+    this.fps = 30;
     this.pathAssets = "./assets";
     this.audio_intro = audios.audio_intro;
     this.audio_main = audios.audio_main;
@@ -19,7 +19,6 @@ class Game {
     this.audio_gameover = audios.audio_gameover;
     this.audio_main.currentTime = 0;
     this.audio_powerup.currentTime = 0;
-    this._update_canvas_subject = new rxjs.Subject();
     this._end_game_subject = new rxjs.Subject();
     this._powerup_observable = new rxjs.Subject();
     this._clock_observable = new rxjs.interval(1000 / this.fps);
@@ -52,7 +51,9 @@ class Game {
   }
 
   subscribeToCanvasUpdate(callback) {
-    this._update_canvas_subject.subscribe(callback);
+    return this._clock_observable
+      .pipe(rxjs.map(() => this.entities))
+      .subscribe(callback);
   }
 
   subscribeToEndedGame(callback) {
@@ -60,7 +61,6 @@ class Game {
   }
 
   checkEntitiesCollissions(entity) {
-    this._update_canvas_subject.next(this.entities);
     if (entity.id.includes("enemy")) {
       let { to_die: collision_entity_to_die, player_powered } =
         entity.checkCollisionWithPlayers(this.players);
@@ -68,20 +68,17 @@ class Game {
         if (collision_entity_to_die.id === entity.id) {
           // enemy has to die
           this.killEnemy(entity);
-          this._update_canvas_subject.next(this.entities);
           player_powered.has_ability = false;
           player_powered.desactivatePower();
           if (this.enemies.length == 0) this.stopGame();
         } else {
           this.killPlayer(collision_entity_to_die);
-          this._update_canvas_subject.next(this.entities);
           if (this.players.length == 0) this.stopGame();
         }
       }
     }
     if (entity.id === "player1" || entity.id === "player2") {
       if (entity.checkPlayerRewardCollision(this.board)) {
-        this._update_canvas_subject.next(this.entities);
         // // show gif when powerup is activated
         // document.getElementById(`${entity.id}-gif`).style.display = "block";
         // const audio = document.getElementById(`audio-${entity.id}`);
@@ -262,7 +259,6 @@ class Game {
     }
 
     this.entities.push(...this.enemies);
-    this._update_canvas_subject.next(this.entities);
   }
 
   addSecondPlayer() {
@@ -325,6 +321,7 @@ class Game {
   }
 
   stopGame() {
+    this.canvas.unsubscribeAll();
     this.audio_gameover.play();
     this.audio_main.pause();
     this.audio_powerup.pause();
@@ -346,16 +343,6 @@ class Game {
         document.getElementById("win-overlay").innerHTML;
     }
     game_over_window.style = "display: flex";
-  }
-
-  restartGame() {
-    this.audio_main.pause();
-    this.stopAudio(this.audio_powerup);
-    this.restartHeartSprites();
-    this.unsubscribeAll();
-    this.board.restart();
-    let result = this.players.length > 0 ? "p-win" : "e-win";
-    this._end_game_subject.next(result);
   }
 
   restartHeartSprites() {
