@@ -243,9 +243,7 @@ class Game {
 
     this.entities.push(...this.players);
 
-    // make difficulty quantity of enemies
-
-    for (let i = 1; i < this.difficulty+1; i++) {
+    for (let i = 1; i < this.difficulty + 1; i++) {
       this.addEnemy(`enemy${i}`);
     }
 
