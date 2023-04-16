@@ -193,16 +193,16 @@ class Game {
     const skip_window = document.getElementById("skip-box-overlay");
     skip_window.style = "display: none";
     this.audio_main.play();
-    this.players.forEach((player) => {
-      player.keyboard_subscription = this._keyboard_observables[
-        player.id
-      ].subscribe((direction) => player.callbackKeyboardEventSignal(direction));
-    });
     this.entities.forEach(
       (entity) =>
         (entity.clock_subscription = this._clock_observable.subscribe(() => {
           if (entity.id.includes("player")) {
             entity.callbackMoveSignal(this.board);
+            entity.keyboard_subscription = this._keyboard_observables[
+              entity.id
+            ].subscribe((direction) =>
+              entity.callbackKeyboardEventSignal(direction)
+            );
           } else if (entity.id.includes("enemy")) {
             entity.callbackMoveSignal(this.board, this.players);
           }
@@ -211,19 +211,19 @@ class Game {
     this.refreshSubscription();
   }
 
-  removeClockSubscription() {
-    this.entities.forEach((entity) => {
-      if (entity.clock_subscription) entity.clock_subscription.unsubscribe();
-    });
-  }
+  // removeClockSubscription() {
+  //   this.entities.forEach((entity) => {
+  //     if (entity.clock_subscription) entity.clock_subscription.unsubscribe();
+  //   });
+  // }
 
-  refreshClockSubscription() {
-    this.entities.forEach((entity) => {
-      entity.clock_subscription = this._clock_observable.subscribe(() =>
-        entity.callbackMoveSignal(this.board)
-      );
-    });
-  }
+  // refreshClockSubscription() {
+  //   this.entities.forEach((entity) => {
+  //     entity.clock_subscription = this._clock_observable.subscribe(() =>
+  //       entity.callbackMoveSignal(this.board)
+  //     );
+  //   });
+  // }
 
   addPlayersAndEnemies() {
     const sizeCharacter = this.sizeCell;
