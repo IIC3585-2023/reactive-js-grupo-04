@@ -252,12 +252,11 @@ class Game {
 
     this.addEnemy("enemy1");
     this.addEnemy("enemy2");
-    if (this.difficulty == 1) {
+    if (this.difficulty >= 1) {
       this.addEnemy("enemy3");
       this.addEnemy("enemy4");
-
-    } 
-    if (this.difficulty == 2) {
+    }
+    if (this.difficulty >= 2) {
       this.addEnemy("enemy5");
       this.addEnemy("enemy6");
     }

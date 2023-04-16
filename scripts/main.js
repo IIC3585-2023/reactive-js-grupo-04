@@ -23,7 +23,7 @@ class MainScene {
     this.keymaps = keymaps;
     this.board = new Board(boards[0].board);
     this.mode = 1;
-    this.difficulty = 0;
+    this.difficulty = boards[0].difficulty;
     this.canvas = null;
     this.game = null;
     this.game_ended_signal_subcription = null;
