@@ -23,12 +23,10 @@ class Game {
     this._end_game_subject = new rxjs.Subject();
     this._powerup_observable = new rxjs.Subject();
     this._clock_observable = new rxjs.interval(1000 / this.fps);
-    this._keyboard_observable_1 = this.declareKeyBoardObservable(
-      this.keymaps.player1
-    );
-    this._keyboard_observable_2 = this.declareKeyBoardObservable(
-      this.keymaps.player2
-    );
+    this._keyboard_observables = {
+      player1: this.declareKeyBoardObservable(this.keymaps.player1),
+      player2: this.declareKeyBoardObservable(this.keymaps.player2),
+    };
   }
 
   init() {
@@ -196,24 +194,19 @@ class Game {
     skip_window.style = "display: none";
     this.audio_main.play();
     this.players.forEach((player) => {
-      player.clock_subscription = this._clock_observable.subscribe(() =>
-        player.callbackMoveSignal(this.board)
-      );
-      if (player.id == "player1") {
-        player.keyboard_subscription = this._keyboard_observable_1.subscribe(
-          (direction) => player.callbackKeyboardEventSignal(direction)
-        );
-      } else {
-        player.keyboard_subscription = this._keyboard_observable_2.subscribe(
-          (direction) => player.callbackKeyboardEventSignal(direction)
-        );
-      }
+      player.keyboard_subscription = this._keyboard_observables[
+        player.id
+      ].subscribe((direction) => player.callbackKeyboardEventSignal(direction));
     });
-    this.enemies.forEach(
-      (enemy) =>
-        (enemy.clock_subscription = this._clock_observable.subscribe(() =>
-          enemy.callbackMoveSignal(this.board, this.players)
-        ))
+    this.entities.forEach(
+      (entity) =>
+        (entity.clock_subscription = this._clock_observable.subscribe(() => {
+          if (entity.id.includes("player")) {
+            entity.callbackMoveSignal(this.board);
+          } else if (entity.id.includes("enemy")) {
+            entity.callbackMoveSignal(this.board, this.players);
+          }
+        }))
     );
     this.refreshSubscription();
   }
@@ -288,7 +281,7 @@ class Game {
       id,
       x * sizeCharacter,
       y * sizeCharacter,
-      sizeCharacter,
+      sizeCharacter
     );
     this.enemies.push(enemy);
   }
