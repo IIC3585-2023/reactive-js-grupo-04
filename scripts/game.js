@@ -289,7 +289,6 @@ class Game {
       x * sizeCharacter,
       y * sizeCharacter,
       sizeCharacter,
-      this.players
     );
     this.enemies.push(enemy);
   }

@@ -179,7 +179,7 @@ class Player extends Entity {
 }
 
 class Enemy extends Entity {
-  constructor(id, x, y, size, players) {
+  constructor(id, x, y, size) {
     super(id, x, y, size);
 
     this.oppositeDirection = {
