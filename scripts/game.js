@@ -243,15 +243,10 @@ class Game {
 
     this.entities.push(...this.players);
 
-    this.addEnemy("enemy1");
-    this.addEnemy("enemy2");
-    if (this.difficulty >= 1) {
-      this.addEnemy("enemy3");
-      this.addEnemy("enemy4");
-    }
-    if (this.difficulty >= 2) {
-      this.addEnemy("enemy5");
-      this.addEnemy("enemy6");
+    // make difficulty quantity of enemies
+
+    for (let i = 1; i < this.difficulty+1; i++) {
+      this.addEnemy(`enemy${i}`);
     }
 
     this.entities.push(...this.enemies);
