@@ -208,23 +208,6 @@ class Game {
     this.refreshSubscription();
   }
 
-  skipIntro() {
-    //...
-    document.removeEventListener("keydown", this.skipIntro);
-    //...
-  }
-
-  startGameIntro() {
-    //Start game
-  }
-
-  playAudioIntro() {
-    //...
-    this.audio.addEventListener("ended", this.startGame);
-    document.addEventListener("keydown", this.skipIntro);
-    //...
-  }
-
   // removeClockSubscription() {
   //   this.entities.forEach((entity) => {
   //     if (entity.clock_subscription) entity.clock_subscription.unsubscribe();
