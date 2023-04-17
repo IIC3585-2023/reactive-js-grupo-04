@@ -11,7 +11,7 @@ class Game {
     this.entities = [];
     this.move_subscription = null;
     this.powerup_subscription = null;
-    this.fps = 60;
+    this.fps = 70;
     this.pathAssets = "./assets";
     this.audio_intro = audios.audio_intro;
     this.audio_main = audios.audio_main;
@@ -19,16 +19,13 @@ class Game {
     this.audio_gameover = audios.audio_gameover;
     this.audio_main.currentTime = 0;
     this.audio_powerup.currentTime = 0;
-    this._update_canvas_subject = new rxjs.Subject();
     this._end_game_subject = new rxjs.Subject();
     this._powerup_observable = new rxjs.Subject();
     this._clock_observable = new rxjs.interval(1000 / this.fps);
-    this._keyboard_observable_1 = this.declareKeyBoardObservable(
-      this.keymaps.player1
-    );
-    this._keyboard_observable_2 = this.declareKeyBoardObservable(
-      this.keymaps.player2
-    );
+    this._keyboard_observables = {
+      player1: this.declareKeyBoardObservable(this.keymaps.player1),
+      player2: this.declareKeyBoardObservable(this.keymaps.player2),
+    };
   }
 
   init() {
@@ -52,7 +49,9 @@ class Game {
   }
 
   subscribeToCanvasUpdate(callback) {
-    this._update_canvas_subject.subscribe(callback);
+    return this._clock_observable
+      .pipe(rxjs.map(() => this.entities))
+      .subscribe(callback);
   }
 
   subscribeToEndedGame(callback) {
@@ -60,7 +59,6 @@ class Game {
   }
 
   checkEntitiesCollissions(entity) {
-    this._update_canvas_subject.next(this.entities);
     if (entity.id.includes("enemy")) {
       let { to_die: collision_entity_to_die, player_powered } =
         entity.checkCollisionWithPlayers(this.players);
@@ -68,20 +66,17 @@ class Game {
         if (collision_entity_to_die.id === entity.id) {
           // enemy has to die
           this.killEnemy(entity);
-          this._update_canvas_subject.next(this.entities);
           player_powered.has_ability = false;
           player_powered.desactivatePower();
           if (this.enemies.length == 0) this.stopGame();
         } else {
           this.killPlayer(collision_entity_to_die);
-          this._update_canvas_subject.next(this.entities);
           if (this.players.length == 0) this.stopGame();
         }
       }
     }
     if (entity.id === "player1" || entity.id === "player2") {
       if (entity.checkPlayerRewardCollision(this.board)) {
-        this._update_canvas_subject.next(this.entities);
         // // show gif when powerup is activated
         // document.getElementById(`${entity.id}-gif`).style.display = "block";
         // const audio = document.getElementById(`audio-${entity.id}`);
@@ -195,42 +190,37 @@ class Game {
     const skip_window = document.getElementById("skip-box-overlay");
     skip_window.style = "display: none";
     this.audio_main.play();
-    this.players.forEach((player) => {
-      player.clock_subscription = this._clock_observable.subscribe(() =>
-        player.callbackMoveSignal(this.board)
-      );
-      if (player.id == "player1") {
-        player.keyboard_subscription = this._keyboard_observable_1.subscribe(
-          (direction) => player.callbackKeyboardEventSignal(direction)
-        );
-      } else {
-        player.keyboard_subscription = this._keyboard_observable_2.subscribe(
-          (direction) => player.callbackKeyboardEventSignal(direction)
-        );
-      }
-    });
-    this.enemies.forEach(
-      (enemy) =>
-        (enemy.clock_subscription = this._clock_observable.subscribe(() =>
-          enemy.callbackMoveSignal(this.board, this.players)
-        ))
+    this.entities.forEach(
+      (entity) =>
+        (entity.clock_subscription = this._clock_observable.subscribe(() => {
+          if (entity.id.includes("player")) {
+            entity.callbackMoveSignal(this.board);
+            entity.keyboard_subscription = this._keyboard_observables[
+              entity.id
+            ].subscribe((direction) =>
+              entity.callbackKeyboardEventSignal(direction)
+            );
+          } else if (entity.id.includes("enemy")) {
+            entity.callbackMoveSignal(this.board, this.players);
+          }
+        }))
     );
     this.refreshSubscription();
   }
 
-  removeClockSubscription() {
-    this.entities.forEach((entity) => {
-      if (entity.clock_subscription) entity.clock_subscription.unsubscribe();
-    });
-  }
+  // removeClockSubscription() {
+  //   this.entities.forEach((entity) => {
+  //     if (entity.clock_subscription) entity.clock_subscription.unsubscribe();
+  //   });
+  // }
 
-  refreshClockSubscription() {
-    this.entities.forEach((entity) => {
-      entity.clock_subscription = this._clock_observable.subscribe(() =>
-        entity.callbackMoveSignal(this.board)
-      );
-    });
-  }
+  // refreshClockSubscription() {
+  //   this.entities.forEach((entity) => {
+  //     entity.clock_subscription = this._clock_observable.subscribe(() =>
+  //       entity.callbackMoveSignal(this.board)
+  //     );
+  //   });
+  // }
 
   addPlayersAndEnemies() {
     const sizeCharacter = this.sizeCell;
@@ -250,19 +240,11 @@ class Game {
 
     this.entities.push(...this.players);
 
-    this.addEnemy("enemy1");
-    this.addEnemy("enemy2");
-    if (this.difficulty >= 1) {
-      this.addEnemy("enemy3");
-      this.addEnemy("enemy4");
-    }
-    if (this.difficulty >= 2) {
-      this.addEnemy("enemy5");
-      this.addEnemy("enemy6");
+    for (let i = 1; i < this.difficulty + 1; i++) {
+      this.addEnemy(`enemy${i}`);
     }
 
     this.entities.push(...this.enemies);
-    this._update_canvas_subject.next(this.entities);
   }
 
   addSecondPlayer() {
@@ -288,8 +270,7 @@ class Game {
       id,
       x * sizeCharacter,
       y * sizeCharacter,
-      sizeCharacter,
-      this.players
+      sizeCharacter
     );
     this.enemies.push(enemy);
   }
@@ -325,6 +306,7 @@ class Game {
   }
 
   stopGame() {
+    this.canvas.unsubscribeAll();
     this.audio_gameover.play();
     this.audio_main.pause();
     this.audio_powerup.pause();
@@ -334,6 +316,18 @@ class Game {
     const result = this.players.length > 0 ? "p-win" : "e-win";
     this._end_game_subject.next(result);
     this.showGameOverWindow(result);
+  }
+
+  restartGame() {
+    this.canvas.unsubscribeAll();
+    this.audio_main.pause();
+    this.stopAudio(this.audio_powerup);
+    this.restartHeartSprites();
+    this.unsubscribeAll();
+    this.canvas.update(this.entities);
+    this.board.restart();
+    let result = this.players.length > 0 ? "p-win" : "e-win";
+    this._end_game_subject.next(result);
   }
 
   showGameOverWindow(result) {
@@ -346,16 +340,6 @@ class Game {
         document.getElementById("win-overlay").innerHTML;
     }
     game_over_window.style = "display: flex";
-  }
-
-  restartGame() {
-    this.audio_main.pause();
-    this.stopAudio(this.audio_powerup);
-    this.restartHeartSprites();
-    this.unsubscribeAll();
-    this.board.restart();
-    let result = this.players.length > 0 ? "p-win" : "e-win";
-    this._end_game_subject.next(result);
   }
 
   restartHeartSprites() {

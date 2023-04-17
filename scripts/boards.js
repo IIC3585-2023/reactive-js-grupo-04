@@ -72,7 +72,7 @@ class Board {
 const BOARDS = [
   {
     id: 0,
-    difficulty: 1,
+    difficulty: 3,
     board: `
         ##############
         #.......#R...#
@@ -89,7 +89,7 @@ const BOARDS = [
   },
   {
     id: 1,
-    difficulty: 2,
+    difficulty: 5,
     board: `
         ############################
         #............##............#
@@ -105,7 +105,7 @@ const BOARDS = [
   },
   {
     id: 2,
-    difficulty: 2,
+    difficulty: 6,
     board: `
         #############
         #.R.........#
@@ -125,7 +125,7 @@ const BOARDS = [
   },
   {
     id: 3,
-    difficulty: 0,
+    difficulty: 2,
     board: `
       #######
       #.....#
@@ -139,7 +139,7 @@ const BOARDS = [
   },
   {
     id: 4,
-    difficulty: 1,
+    difficulty: 2,
     board: `
       #######
       #.....#
@@ -153,7 +153,7 @@ const BOARDS = [
   },
   {
     id: 5,
-    difficulty: 1,
+    difficulty: 3,
     board: `
       #######
       #.....#

@@ -4,7 +4,7 @@ class Entity {
     this.position = { x: x, y: y };
     this.size = size;
     this.img = document.getElementById(id);
-    this.speed = size / 10;
+    this.speed = size / 20;
     this.directionMovement = "up";
     this.directionKeyboard = "up";
     this.directionMap = {
@@ -179,7 +179,7 @@ class Player extends Entity {
 }
 
 class Enemy extends Entity {
-  constructor(id, x, y, size, players) {
+  constructor(id, x, y, size) {
     super(id, x, y, size);
 
     this.oppositeDirection = {
