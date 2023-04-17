@@ -190,22 +190,39 @@ class Game {
     const skip_window = document.getElementById("skip-box-overlay");
     skip_window.style = "display: none";
     this.audio_main.play();
-    this.entities.forEach(
-      (entity) =>
-        (entity.clock_subscription = this._clock_observable.subscribe(() => {
-          if (entity.id.includes("player")) {
-            entity.callbackMoveSignal(this.board);
-            entity.keyboard_subscription = this._keyboard_observables[
-              entity.id
-            ].subscribe((direction) =>
-              entity.callbackKeyboardEventSignal(direction)
-            );
-          } else if (entity.id.includes("enemy")) {
-            entity.callbackMoveSignal(this.board, this.players);
-          }
-        }))
-    );
+    this.players.forEach((player) => {
+      player.clock_subscription = this._clock_observable.subscribe(() => {
+        player.callbackMoveSignal(this.board);
+        player.keyboard_subscription = this._keyboard_observables[
+          player.id
+        ].subscribe((direction) =>
+          player.callbackKeyboardEventSignal(direction)
+        );
+      });
+    });
+    this.enemies.forEach((enemy) => {
+      enemy.clock_subscription = this._clock_observable.subscribe(() => {
+        enemy.callbackMoveSignal(this.board, this.players);
+      });
+    });
     this.refreshSubscription();
+  }
+
+  skipIntro() {
+    //...
+    document.removeEventListener("keydown", this.skipIntro);
+    //...
+  }
+
+  startGameIntro() {
+    //Start game
+  }
+
+  playAudioIntro() {
+    //...
+    this.audio.addEventListener("ended", this.startGame);
+    document.addEventListener("keydown", this.skipIntro);
+    //...
   }
 
   // removeClockSubscription() {
