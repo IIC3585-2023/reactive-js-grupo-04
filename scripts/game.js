@@ -11,7 +11,7 @@ class Game {
     this.entities = [];
     this.move_subscription = null;
     this.powerup_subscription = null;
-    this.fps = 30;
+    this.fps = 70;
     this.pathAssets = "./assets";
     this.audio_intro = audios.audio_intro;
     this.audio_main = audios.audio_main;
@@ -331,6 +331,18 @@ class Game {
     const result = this.players.length > 0 ? "p-win" : "e-win";
     this._end_game_subject.next(result);
     this.showGameOverWindow(result);
+  }
+
+  restartGame() {
+    this.canvas.unsubscribeAll();
+    this.audio_main.pause();
+    this.stopAudio(this.audio_powerup);
+    this.restartHeartSprites();
+    this.unsubscribeAll();
+    this.canvas.update(this.entities);
+    this.board.restart();
+    let result = this.players.length > 0 ? "p-win" : "e-win";
+    this._end_game_subject.next(result);
   }
 
   showGameOverWindow(result) {
